@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>78DLC Player</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="sidebar-head">
+          <div class="profile-strip">
+            <div class="profile-avatar">DS</div>
+            <div class="profile-copy">
+              <strong id="profile-name">Daniel_Smith</strong>
+              <span id="profile-subtitle">Local music library</span>
+            </div>
+          </div>
+
+          <div class="brand-lockup">
+            <span class="brand-kicker" id="brand-kicker">Private Player</span>
+            <h1>78DLC</h1>
+          </div>
+        </div>
+
+        <nav class="sidebar-nav">
+          <button class="sidebar-item active" data-view="likes" type="button">
+            <span class="sidebar-item-main">
+              <span class="ui-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M12 20.6 4.9 13.8A4.9 4.9 0 0 1 12 7a4.9 4.9 0 0 1 7.1 6.8Z" />
+                </svg>
+              </span>
+              <span id="likes-label">Special Select</span>
+            </span>
+            <strong id="likes-count">0</strong>
+          </button>
+
+          <button class="sidebar-item" data-view="recent" type="button">
+            <span class="sidebar-item-main">
+              <span class="ui-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M12 7v5l3 2" />
+                  <path d="M20 12a8 8 0 1 1-2.3-5.7" />
+                  <path d="M20 4v5h-5" />
+                </svg>
+              </span>
+              <span id="recent-label">Recent Played</span>
+            </span>
+            <strong id="recent-count">0</strong>
+          </button>
+        </nav>
+
+        <section class="sidebar-group">
+          <div class="sidebar-group-header">
+            <strong id="playlist-heading">My Lists</strong>
+            <div class="sidebar-group-actions">
+              <button id="playlist-create-toggle" class="text-button" type="button">
+                <span class="ui-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M12 5v14" />
+                    <path d="M5 12h14" />
+                  </svg>
+                </span>
+                <span id="playlist-create-toggle-label">New Playlist</span>
+              </button>
+              <button id="playlist-toggle" class="icon-button small" type="button" aria-label="Toggle playlists">
+                <span class="ui-icon" aria-hidden="true">
+                  <svg id="playlist-toggle-icon" viewBox="0 0 24 24">
+                    <path d="m6 9 6 6 6-6" />
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </div>
+
+          <form id="playlist-form" class="inline-playlist-form" hidden>
+            <input
+              id="playlist-name-input"
+              name="playlistName"
+              placeholder="Playlist name"
+              type="text"
+            />
+            <button id="playlist-submit-label" class="secondary-button compact" type="submit">
+              Create
+            </button>
+          </form>
+
+          <div id="playlist-list" class="playlist-list"></div>
+        </section>
+
+        <div class="sidebar-foot">
+          <p id="source-path-label">Source Folder</p>
+          <code id="source-path"></code>
+        </div>
+      </aside>
+
+      <div class="workspace">
+        <header class="topbar">
+          <div class="topbar-nav">
+            <button id="back-button" class="icon-button small" type="button" aria-label="Back">
+              <span class="ui-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="m15 6-6 6 6 6" />
+                </svg>
+              </span>
+            </button>
+            <button id="forward-button" class="icon-button small" type="button" aria-label="Forward">
+              <span class="ui-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="m9 6 6 6-6 6" />
+                </svg>
+              </span>
+            </button>
+          </div>
+
+          <label class="search-shell" for="search-input">
+            <span class="ui-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="6.5" />
+                <path d="m16 16 4.5 4.5" />
+              </svg>
+            </span>
+            <input id="search-input" placeholder="Search songs, artists, lyrics" type="search" />
+          </label>
+
+          <div class="topbar-actions">
+            <div class="language-toggle" id="language-toggle">
+              <button class="language-option" data-language="zh" type="button">中文</button>
+              <button class="language-option active" data-language="en" type="button">EN</button>
+            </div>
+
+            <button id="refresh-button" class="secondary-button compact" type="button">
+              <span class="ui-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M20 12a8 8 0 1 1-2.3-5.7" />
+                  <path d="M20 4v5h-5" />
+                </svg>
+              </span>
+              <span id="refresh-button-label">Rescan</span>
+            </button>
+
+            <button id="settings-button" class="icon-button small" type="button" aria-label="Settings">
+              <span class="ui-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M12 8.8A3.2 3.2 0 1 1 8.8 12 3.2 3.2 0 0 1 12 8.8Z" />
+                  <path
+                    d="m4.8 14 1.2 2.1 2.2-.1a6.6 6.6 0 0 0 1.4.8l1 1.9h2.4l1-1.9a6.6 6.6 0 0 0 1.4-.8l2.2.1 1.2-2.1-1.2-1.8a6.9 6.9 0 0 0 0-1.6L20 8.8 18.8 6.7l-2.2.1a6.7 6.7 0 0 0-1.4-.8l-1-1.9h-2.4l-1 1.9a6.7 6.7 0 0 0-1.4.8L6 6.7 4.8 8.8 6 10.6a6.9 6.9 0 0 0 0 1.6Z"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </header>
+
+        <main class="content-shell">
+          <section class="playlist-header">
+            <div class="playlist-cover">
+              <img id="header-cover-image" alt="Header cover art" hidden />
+              <div id="header-cover-placeholder" class="cover-fallback">SS</div>
+            </div>
+
+            <div class="playlist-meta">
+              <div class="playlist-meta-top">
+                <span class="type-chip" id="hero-label">Collection</span>
+                <span class="header-note" id="hero-source-note">Local source</span>
+              </div>
+
+              <h2 id="hero-title">Special Select</h2>
+              <p id="hero-subtitle" class="playlist-subtitle">
+                All files in the local source folder are treated as your liked music.
+              </p>
+              <p id="hero-meta-line" class="playlist-meta-line">Daniel_Smith / Synced</p>
+
+              <div class="playlist-stat-line">
+                <span id="hero-track-count">0 tracks</span>
+                <span id="hero-duration">--:--</span>
+                <span id="hero-now-playing">Now Playing: Idle</span>
+              </div>
+
+              <div class="header-actions">
+                <button id="hero-play" class="primary-button" type="button">
+                  <span class="ui-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                      <path d="m8 6 10 6-10 6z" />
+                    </svg>
+                  </span>
+                  <span id="hero-play-label">Play All</span>
+                </button>
+
+                <button id="focus-editor-button" class="secondary-button" type="button">
+                  <span class="ui-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                      <path d="m4 20 4.5-1 9.2-9.2a1.8 1.8 0 0 0 0-2.6l-.9-.9a1.8 1.8 0 0 0-2.6 0L5 15.5Z" />
+                    </svg>
+                  </span>
+                  <span id="focus-editor-label">Edit Selected</span>
+                </button>
+
+                <button id="open-immersive-button" class="secondary-button" type="button">
+                  <span class="ui-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                      <path d="M8 4H4v4" />
+                      <path d="m4 4 6 6" />
+                      <path d="M16 20h4v-4" />
+                      <path d="m20 20-6-6" />
+                    </svg>
+                  </span>
+                  <span id="open-immersive-label">Immersive</span>
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <div class="content-tabs">
+            <button id="tab-songs" class="content-tab active" type="button">Songs</button>
+            <button id="tab-editor" class="content-tab" type="button">Editor</button>
+            <button id="tab-lyrics" class="content-tab" type="button">Lyrics</button>
+          </div>
+
+          <section class="library-layout">
+            <section class="song-panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="panel-kicker" id="song-panel-kicker">Library</p>
+                  <h3 id="song-panel-title">Song Queue</h3>
+                </div>
+                <span id="song-panel-summary" class="panel-summary">Local library</span>
+              </div>
+
+              <div class="song-table-wrap">
+                <table class="song-table">
+                  <thead>
+                    <tr>
+                      <th id="col-index">#</th>
+                      <th id="col-title">Title</th>
+                      <th id="col-artist">Artist</th>
+                      <th id="col-album">Album</th>
+                      <th id="col-duration">Duration</th>
+                      <th id="col-action">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="song-table-body"></tbody>
+                </table>
+              </div>
+            </section>
+
+            <aside class="editor-panel" id="editor-panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="panel-kicker" id="editor-panel-kicker">Inspector</p>
+                  <h3 id="detail-title">Choose a song</h3>
+                </div>
+                <span id="detail-badge" class="type-chip">audio</span>
+              </div>
+
+              <div class="editor-stage">
+                <img id="cover-image" alt="Selected song cover art" hidden />
+                <div id="cover-placeholder" class="cover-fallback large">NO</div>
+              </div>
+
+              <form id="song-form" class="song-form">
+                <label>
+                  <span id="label-display-title">Display Name</span>
+                  <input id="display-title-input" name="displayTitle" type="text" />
+                </label>
+
+                <label>
+                  <span id="label-file-stem">File Name</span>
+                  <div class="field-split">
+                    <input id="file-stem-input" name="fileStem" type="text" />
+                    <span id="file-extension-label" class="field-suffix"></span>
+                  </div>
+                </label>
+
+                <div class="form-grid two">
+                  <label>
+                    <span id="label-artist">Artist</span>
+                    <input id="artist-input" name="artist" type="text" />
+                  </label>
+
+                  <label>
+                    <span id="label-album">Album</span>
+                    <input id="album-input" name="album" type="text" />
+                  </label>
+                </div>
+
+                <label>
+                  <span id="label-notes">Info / Notes</span>
+                  <textarea id="notes-input" name="notes" rows="3"></textarea>
+                </label>
+
+                <label>
+                  <span id="label-lyrics">Lyrics</span>
+                  <textarea id="lyrics-input" name="lyrics" rows="8"></textarea>
+                </label>
+
+                <div class="form-actions">
+                  <button id="save-song-label" class="primary-button compact" type="submit">
+                    Save Song
+                  </button>
+                  <button id="upload-cover-button" class="secondary-button compact" type="button">
+                    Upload Cover
+                  </button>
+                  <button id="remove-cover-button" class="secondary-button compact" type="button">
+                    Remove Cover
+                  </button>
+                </div>
+
+                <div class="playlist-assign-row">
+                  <select id="playlist-select"></select>
+                  <button id="add-to-playlist-button" class="secondary-button compact" type="button">
+                    Add To List
+                  </button>
+                </div>
+              </form>
+
+              <section class="lyrics-preview-panel" id="lyrics-preview-panel">
+                <div class="panel-heading compact">
+                  <div>
+                    <p class="panel-kicker" id="lyrics-preview-kicker">Lyrics</p>
+                    <h3 id="lyrics-preview-title">Preview</h3>
+                  </div>
+                </div>
+                <div id="lyrics-preview" class="lyrics-preview"></div>
+              </section>
+            </aside>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <footer class="player-bar">
+      <div class="player-left">
+        <button id="mini-cover-button" class="mini-cover-button" type="button">
+          <div id="mini-cover" class="mini-cover">AR</div>
+        </button>
+
+        <div class="player-text">
+          <strong id="player-title">Nothing selected</strong>
+          <p id="player-subtitle">Pick a song from the library</p>
+        </div>
+      </div>
+
+      <div class="player-center">
+        <div class="player-controls">
+          <button id="prev-button" class="icon-button transport" type="button" aria-label="Previous">
+            <span class="ui-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M18 6 9.5 12 18 18Z" />
+                <path d="M6 6v12" />
+              </svg>
+            </span>
+          </button>
+
+          <button id="play-button" class="play-button" type="button" aria-label="Play">
+            <span class="ui-icon" aria-hidden="true">
+              <svg id="play-button-icon" viewBox="0 0 24 24">
+                <path d="m8 6 10 6-10 6z" />
+              </svg>
+            </span>
+          </button>
+
+          <button id="next-button" class="icon-button transport" type="button" aria-label="Next">
+            <span class="ui-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M6 6 14.5 12 6 18Z" />
+                <path d="M18 6v12" />
+              </svg>
+            </span>
+          </button>
+        </div>
+
+        <div class="progress-row">
+          <span id="current-time-label">0:00</span>
+          <input id="progress-input" type="range" min="0" max="1000" step="1" value="0" />
+          <span id="duration-label">0:00</span>
+        </div>
+      </div>
+
+      <div class="player-right">
+        <button id="player-lyrics-button" class="icon-button small" type="button" aria-label="Lyrics">
+          <span class="ui-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M6 7h12" />
+              <path d="M6 12h12" />
+              <path d="M6 17h8" />
+            </svg>
+          </span>
+        </button>
+
+        <button id="player-queue-button" class="icon-button small" type="button" aria-label="Queue">
+          <span class="ui-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M8 7h10" />
+              <path d="M8 12h10" />
+              <path d="M8 17h10" />
+              <path d="M5 7h.01" />
+              <path d="M5 12h.01" />
+              <path d="M5 17h.01" />
+            </svg>
+          </span>
+        </button>
+
+        <button id="player-immersive-button" class="icon-button small" type="button" aria-label="Immersive">
+          <span class="ui-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M8 4H4v4" />
+              <path d="m4 4 6 6" />
+              <path d="M16 20h4v-4" />
+              <path d="m20 20-6-6" />
+            </svg>
+          </span>
+        </button>
+
+        <span id="player-status-label" class="player-status">Paused</span>
+      </div>
+    </footer>
+
+    <div id="immersive-overlay" class="immersive-overlay" aria-hidden="true">
+      <div class="immersive-scrim"></div>
+      <div class="immersive-panel">
+        <div class="immersive-topbar">
+          <span id="immersive-kicker">Immersive Playback</span>
+          <button id="immersive-close" class="icon-button small" type="button" aria-label="Close immersive">
+            <span class="ui-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="m6 6 12 12" />
+                <path d="m18 6-12 12" />
+              </svg>
+            </span>
+          </button>
+        </div>
+
+        <div class="immersive-layout">
+          <section class="immersive-art-column">
+            <div id="immersive-disc" class="immersive-disc">
+              <div class="immersive-disc-label">
+                <img id="immersive-cover-image" alt="Immersive cover art" hidden />
+                <div id="immersive-cover-placeholder" class="cover-fallback circle">NP</div>
+              </div>
+            </div>
+
+            <div class="immersive-action-row">
+              <button id="immersive-edit-button" class="secondary-button compact" type="button">
+                Edit
+              </button>
+              <button id="immersive-upload-button" class="secondary-button compact" type="button">
+                Upload Cover
+              </button>
+            </div>
+          </section>
+
+          <section class="immersive-meta-column">
+            <span id="immersive-type-label" class="type-chip">Now Playing</span>
+            <h2 id="immersive-title">Nothing selected</h2>
+            <p id="immersive-subtitle">Pick a song from the library to open the immersive player.</p>
+
+            <div class="immersive-meta-grid">
+              <div>
+                <span id="immersive-artist-label" class="meta-caption">Artist</span>
+                <strong id="immersive-artist">-</strong>
+              </div>
+              <div>
+                <span id="immersive-album-label" class="meta-caption">Album</span>
+                <strong id="immersive-album">-</strong>
+              </div>
+              <div>
+                <span id="immersive-source-label" class="meta-caption">Format</span>
+                <strong id="immersive-source">-</strong>
+              </div>
+            </div>
+
+            <div class="immersive-lyrics-panel">
+              <div class="immersive-lyrics-head">
+                <strong id="immersive-lyrics-heading">Lyrics</strong>
+                <span id="immersive-progress-label">0:00 / 0:00</span>
+              </div>
+              <div id="immersive-lyrics" class="immersive-lyrics"></div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <input id="cover-upload-input" accept="image/*" hidden type="file" />
+    <video id="media-element" hidden playsinline preload="metadata"></video>
+    <div id="toast" class="toast" hidden></div>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

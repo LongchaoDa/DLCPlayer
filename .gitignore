@@ -1,0 +1,8 @@
+.DS_Store
+data/*
+!data/.gitkeep
+!data/covers/
+data/covers/*
+!data/covers/.gitkeep
+source/*
+!source/.gitkeep
