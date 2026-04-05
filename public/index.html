@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
-    <div class="app-shell">
+    <div class="app-shell" id="app-shell">
       <aside class="sidebar">
         <div class="sidebar-head">
           <div class="profile-strip">
@@ -56,14 +56,13 @@
           <div class="sidebar-group-header">
             <strong id="playlist-heading">My Lists</strong>
             <div class="sidebar-group-actions">
-              <button id="playlist-create-toggle" class="text-button" type="button">
+              <button id="playlist-create-toggle" class="icon-button small" type="button" aria-label="New Playlist">
                 <span class="ui-icon" aria-hidden="true">
                   <svg viewBox="0 0 24 24">
                     <path d="M12 5v14" />
                     <path d="M5 12h14" />
                   </svg>
                 </span>
-                <span id="playlist-create-toggle-label">New Playlist</span>
               </button>
               <button id="playlist-toggle" class="icon-button small" type="button" aria-label="Toggle playlists">
                 <span class="ui-icon" aria-hidden="true">
@@ -75,17 +74,31 @@
             </div>
           </div>
 
-          <form id="playlist-form" class="inline-playlist-form" hidden>
-            <input
-              id="playlist-name-input"
-              name="playlistName"
-              placeholder="Playlist name"
-              type="text"
-            />
-            <button id="playlist-submit-label" class="secondary-button compact" type="submit">
-              Create
-            </button>
-          </form>
+          <div class="playlist-create-wrap" id="playlist-create-wrap" aria-hidden="true">
+            <form id="playlist-form" class="inline-playlist-form">
+              <input
+                id="playlist-name-input"
+                name="playlistName"
+                placeholder="Playlist name"
+                type="text"
+              />
+              <button id="playlist-submit-button" class="icon-button small playlist-inline-action" type="submit" aria-label="Create">
+                <span class="ui-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path d="m5 13 4 4L19 7" />
+                  </svg>
+                </span>
+              </button>
+              <button id="playlist-cancel-button" class="icon-button small playlist-inline-action" type="button" aria-label="Cancel">
+                <span class="ui-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path d="m6 6 12 12" />
+                    <path d="m18 6-12 12" />
+                  </svg>
+                </span>
+              </button>
+            </form>
+          </div>
 
           <div id="playlist-list" class="playlist-list"></div>
         </section>
@@ -95,6 +108,17 @@
           <code id="source-path"></code>
         </div>
       </aside>
+
+      <div
+        id="sidebar-resizer"
+        class="sidebar-resizer"
+        aria-label="Resize sidebar"
+        role="separator"
+        aria-orientation="vertical"
+        tabindex="0"
+      >
+        <span class="sidebar-resizer-line" aria-hidden="true"></span>
+      </div>
 
       <div class="workspace">
         <header class="topbar">
@@ -245,88 +269,105 @@
                 </table>
               </div>
             </section>
-
-            <aside class="editor-panel" id="editor-panel">
-              <div class="panel-heading">
-                <div>
-                  <p class="panel-kicker" id="editor-panel-kicker">Inspector</p>
-                  <h3 id="detail-title">Choose a song</h3>
-                </div>
-                <span id="detail-badge" class="type-chip">audio</span>
-              </div>
-
-              <div class="editor-stage">
-                <img id="cover-image" alt="Selected song cover art" hidden />
-                <div id="cover-placeholder" class="cover-fallback large">NO</div>
-              </div>
-
-              <form id="song-form" class="song-form">
-                <label>
-                  <span id="label-display-title">Display Name</span>
-                  <input id="display-title-input" name="displayTitle" type="text" />
-                </label>
-
-                <label>
-                  <span id="label-file-stem">File Name</span>
-                  <div class="field-split">
-                    <input id="file-stem-input" name="fileStem" type="text" />
-                    <span id="file-extension-label" class="field-suffix"></span>
-                  </div>
-                </label>
-
-                <div class="form-grid two">
-                  <label>
-                    <span id="label-artist">Artist</span>
-                    <input id="artist-input" name="artist" type="text" />
-                  </label>
-
-                  <label>
-                    <span id="label-album">Album</span>
-                    <input id="album-input" name="album" type="text" />
-                  </label>
-                </div>
-
-                <label>
-                  <span id="label-notes">Info / Notes</span>
-                  <textarea id="notes-input" name="notes" rows="3"></textarea>
-                </label>
-
-                <label>
-                  <span id="label-lyrics">Lyrics</span>
-                  <textarea id="lyrics-input" name="lyrics" rows="8"></textarea>
-                </label>
-
-                <div class="form-actions">
-                  <button id="save-song-label" class="primary-button compact" type="submit">
-                    Save Song
-                  </button>
-                  <button id="upload-cover-button" class="secondary-button compact" type="button">
-                    Upload Cover
-                  </button>
-                  <button id="remove-cover-button" class="secondary-button compact" type="button">
-                    Remove Cover
-                  </button>
-                </div>
-
-                <div class="playlist-assign-row">
-                  <select id="playlist-select"></select>
-                  <button id="add-to-playlist-button" class="secondary-button compact" type="button">
-                    Add To List
-                  </button>
-                </div>
-              </form>
-
-              <section class="lyrics-preview-panel" id="lyrics-preview-panel">
-                <div class="panel-heading compact">
-                  <div>
-                    <p class="panel-kicker" id="lyrics-preview-kicker">Lyrics</p>
-                    <h3 id="lyrics-preview-title">Preview</h3>
-                  </div>
-                </div>
-                <div id="lyrics-preview" class="lyrics-preview"></div>
-              </section>
-            </aside>
           </section>
+
+          <div id="editor-scrim" class="editor-scrim" aria-hidden="true"></div>
+
+          <aside class="editor-panel editor-drawer" id="editor-panel" aria-hidden="true">
+            <div class="panel-heading">
+              <div>
+                <p class="panel-kicker" id="editor-panel-kicker">Inspector</p>
+                <h3 id="detail-title">Choose a song</h3>
+              </div>
+              <div class="panel-heading-actions">
+                <span id="detail-badge" class="type-chip">audio</span>
+                <button id="editor-close" class="icon-button small" type="button" aria-label="Close editor">
+                  <span class="ui-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                      <path d="m6 6 12 12" />
+                      <path d="m18 6-12 12" />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            <div class="editor-cover-row">
+              <div class="editor-thumb">
+                <img id="cover-image" alt="Selected song cover art" hidden />
+                <div id="cover-placeholder" class="cover-fallback thumb">NO</div>
+              </div>
+
+              <div class="editor-cover-actions">
+                <button id="upload-cover-button" class="text-button compact cover-action" type="button">
+                  Upload Cover
+                </button>
+                <button id="remove-cover-button" class="text-button compact cover-action" type="button">
+                  Remove Cover
+                </button>
+              </div>
+            </div>
+
+            <form id="song-form" class="song-form">
+              <label>
+                <span id="label-display-title">Display Name</span>
+                <input id="display-title-input" name="displayTitle" type="text" />
+              </label>
+
+              <label>
+                <span id="label-file-stem">File Name</span>
+                <div class="field-split">
+                  <input id="file-stem-input" name="fileStem" type="text" />
+                  <span id="file-extension-label" class="field-suffix"></span>
+                </div>
+              </label>
+
+              <div class="form-grid two">
+                <label>
+                  <span id="label-artist">Artist</span>
+                  <input id="artist-input" name="artist" type="text" />
+                </label>
+
+                <label>
+                  <span id="label-album">Album</span>
+                  <input id="album-input" name="album" type="text" />
+                </label>
+              </div>
+
+              <label>
+                <span id="label-notes">Info / Notes</span>
+                <textarea id="notes-input" name="notes" rows="3"></textarea>
+              </label>
+
+              <label>
+                <span id="label-lyrics">Lyrics</span>
+                <textarea id="lyrics-input" name="lyrics" rows="8"></textarea>
+              </label>
+
+              <div class="playlist-assign-row">
+                <select id="playlist-select"></select>
+                <button id="add-to-playlist-button" class="secondary-button compact" type="button">
+                  Add To List
+                </button>
+              </div>
+
+              <div class="form-actions">
+                <button id="save-song-label" class="primary-button compact" type="submit">
+                  Save Song
+                </button>
+              </div>
+            </form>
+
+            <section class="lyrics-preview-panel" id="lyrics-preview-panel">
+              <div class="panel-heading compact">
+                <div>
+                  <p class="panel-kicker" id="lyrics-preview-kicker">Lyrics</p>
+                  <h3 id="lyrics-preview-title">Preview</h3>
+                </div>
+              </div>
+              <div id="lyrics-preview" class="lyrics-preview"></div>
+            </section>
+          </aside>
         </main>
       </div>
     </div>
@@ -390,9 +431,9 @@
           </span>
         </button>
 
-        <button id="player-queue-button" class="icon-button small" type="button" aria-label="Queue">
+        <button id="player-queue-button" class="icon-button small mode-button" type="button" aria-label="Queue">
           <span class="ui-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24">
+            <svg id="player-mode-icon" viewBox="0 0 24 24">
               <path d="M8 7h10" />
               <path d="M8 12h10" />
               <path d="M8 17h10" />
@@ -487,6 +528,29 @@
     <input id="cover-upload-input" accept="image/*" hidden type="file" />
     <video id="media-element" hidden playsinline preload="metadata"></video>
     <div id="toast" class="toast" hidden></div>
+
+    <div id="playlist-menu" class="context-menu" hidden>
+      <button id="playlist-menu-rename" class="context-menu-item" type="button">Rename</button>
+      <button id="playlist-menu-delete" class="context-menu-item danger" type="button">Delete Playlist</button>
+    </div>
+
+    <div id="playlist-dialog" class="dialog-shell" aria-hidden="true" hidden>
+      <div class="dialog-scrim"></div>
+      <div class="dialog-card" role="dialog" aria-modal="true" aria-labelledby="playlist-dialog-title">
+        <h2 id="playlist-dialog-title">Delete this playlist?</h2>
+        <p id="playlist-dialog-copy">
+          This will remove the playlist only. Songs in your library will not be deleted.
+        </p>
+        <label id="playlist-dialog-field" class="dialog-field" hidden>
+          <span id="playlist-dialog-field-label">Playlist name</span>
+          <input id="playlist-dialog-input" type="text" />
+        </label>
+        <div class="dialog-actions">
+          <button id="playlist-dialog-cancel" class="secondary-button compact" type="button">Cancel</button>
+          <button id="playlist-dialog-confirm" class="primary-button compact danger" type="button">Delete Playlist</button>
+        </div>
+      </div>
+    </div>
 
     <script src="/app.js"></script>
   </body>
