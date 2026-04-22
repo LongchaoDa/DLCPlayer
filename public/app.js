@@ -9,6 +9,7 @@ const MESSAGES = {
     playlistNamePlaceholder: "Playlist name",
     create: "Create",
     sourceFolder: "Source Folder",
+    openSourceFolder: "Open source folder",
     searchPlaceholder: "Search songs, artists, lyrics",
     rescan: "Rescan",
     collection: "Collection",
@@ -18,7 +19,7 @@ const MESSAGES = {
     collectionSubtitle: "All files in the local source folder are treated as your liked music.",
     recentSubtitle: "Songs you played recently appear here.",
     playlistSubtitle: "Custom list stored in the local player database.",
-    ownerName: "Daniel_Smith",
+    ownerName: "Longchao's",
     synced: "Synced",
     playAll: "Play All",
     editSelected: "Edit Selected",
@@ -94,9 +95,12 @@ const MESSAGES = {
     playlistRenamed: "Playlist renamed.",
     playlistDeleted: "Playlist deleted.",
     playlistNameRequired: "Playlist name cannot be empty.",
+    selectPlaylist: "Select",
+    selectPlaylistFirst: "Select a playlist first.",
     songAdded: "Song added to playlist.",
     songRemoved: "Song removed from the current list.",
     rescanned: "Source folder rescanned.",
+    sourceFolderOpened: "Source folder opened.",
     noSongsAvailable: "No songs available in this view.",
     noMoreSongs: "No more songs in this direction.",
     chooseSongFirst: "Choose a song first.",
@@ -122,6 +126,7 @@ const MESSAGES = {
     playlistNamePlaceholder: "歌单名称",
     create: "创建",
     sourceFolder: "歌曲目录",
+    openSourceFolder: "打开歌曲目录",
     searchPlaceholder: "搜索歌曲、歌手、歌词",
     rescan: "重新扫描",
     collection: "收藏",
@@ -131,7 +136,7 @@ const MESSAGES = {
     collectionSubtitle: "source 文件夹中的内容会直接作为你的喜欢音乐。",
     recentSubtitle: "你最近播放过的歌曲会出现在这里。",
     playlistSubtitle: "保存在本地播放器数据库中的自定义歌单。",
-    ownerName: "Daniel_Smith",
+    ownerName: "Longchao's",
     synced: "已同步",
     playAll: "播放全部",
     editSelected: "编辑选中",
@@ -207,9 +212,12 @@ const MESSAGES = {
     playlistRenamed: "歌单已重命名。",
     playlistDeleted: "歌单已删除。",
     playlistNameRequired: "歌单名称不能为空。",
+    selectPlaylist: "选择歌单",
+    selectPlaylistFirst: "请先选择歌单。",
     songAdded: "已加入歌单。",
     songRemoved: "已从当前歌单移除。",
     rescanned: "已重新扫描 source 文件夹。",
+    sourceFolderOpened: "已打开歌曲目录。",
     noSongsAvailable: "当前视图没有可播放歌曲。",
     noMoreSongs: "这个方向没有更多歌曲。",
     chooseSongFirst: "请先选择一首歌。",
@@ -257,6 +265,7 @@ const state = {
   shuffleOrder: [],
   shuffleQueueKey: "",
   shuffleIndex: -1,
+  playlistSelectionBySongId: {},
 };
 
 const durationProbeQueue = [];
@@ -277,9 +286,12 @@ const elements = {
   playlistSubmitButton: document.querySelector("#playlist-submit-button"),
   playlistCancelButton: document.querySelector("#playlist-cancel-button"),
   playlistList: document.querySelector("#playlist-list"),
+  openSourceFolderButton: document.querySelector("#open-source-folder-button"),
   sourcePathLabel: document.querySelector("#source-path-label"),
   sourcePath: document.querySelector("#source-path"),
   sidebarResizer: document.querySelector("#sidebar-resizer"),
+  profileAvatar: document.querySelector(".profile-avatar"),
+  profileName: document.querySelector("#profile-name"),
   profileSubtitle: document.querySelector("#profile-subtitle"),
   brandKicker: document.querySelector("#brand-kicker"),
   likesLabel: document.querySelector("#likes-label"),
@@ -585,6 +597,14 @@ function bindEvents() {
   elements.backButton.addEventListener("click", () => window.history.back());
   elements.forwardButton.addEventListener("click", () => window.history.forward());
   elements.settingsButton.addEventListener("click", () => showToast(t("settingsSoon")));
+  elements.openSourceFolderButton.addEventListener("click", async () => {
+    try {
+      await fetchJson("/api/source-folder/open", { method: "POST" });
+      showToast(t("sourceFolderOpened"));
+    } catch (error) {
+      showToast(error.message);
+    }
+  });
 
   elements.searchInput.addEventListener("input", () => {
     state.search = elements.searchInput.value;
@@ -791,6 +811,15 @@ function bindEvents() {
     }
   });
 
+  elements.playlistSelect.addEventListener("change", () => {
+    const selectedSong = getSelectedSong();
+    if (!selectedSong) {
+      return;
+    }
+
+    state.playlistSelectionBySongId[selectedSong.id] = elements.playlistSelect.value;
+  });
+
   elements.addToPlaylistButton.addEventListener("click", async () => {
     const selectedSong = getSelectedSong();
     const playlistId = Number(elements.playlistSelect.value);
@@ -801,11 +830,12 @@ function bindEvents() {
     }
 
     if (!playlistId) {
-      showToast(t("createPlaylistFirst"));
+      showToast(state.playlists.length ? t("selectPlaylistFirst") : t("createPlaylistFirst"));
       return;
     }
 
     try {
+      state.playlistSelectionBySongId[selectedSong.id] = String(playlistId);
       const nextState = await fetchJson(`/api/playlists/${playlistId}/songs`, {
         method: "POST",
         body: JSON.stringify({ songId: selectedSong.id }),
@@ -1046,6 +1076,8 @@ function renderStaticCopy() {
   document.title = `78DLC Player`;
 
   elements.brandKicker.textContent = t("privatePlayer");
+  elements.profileAvatar.textContent = buildInitials(t("ownerName"));
+  elements.profileName.textContent = t("ownerName");
   elements.profileSubtitle.textContent = t("localMusicLibrary");
   elements.likesLabel.textContent = t("likes");
   elements.recentLabel.textContent = t("recent");
@@ -1096,6 +1128,8 @@ function renderStaticCopy() {
   elements.playlistSubmitButton.setAttribute("aria-label", t("create"));
   elements.playlistCancelButton.title = t("cancel");
   elements.playlistCancelButton.setAttribute("aria-label", t("cancel"));
+  elements.openSourceFolderButton.title = t("openSourceFolder");
+  elements.openSourceFolderButton.setAttribute("aria-label", t("openSourceFolder"));
   elements.editorClose.title = t("closeEditor");
   elements.editorClose.setAttribute("aria-label", t("closeEditor"));
   elements.sidebarResizer.title = t("sidebarResizeLabel");
@@ -1503,9 +1537,17 @@ function renderPlaylistSelect() {
     return;
   }
 
-  elements.playlistSelect.innerHTML = state.playlists
-    .map((playlist) => `<option value="${playlist.id}">${escapeHtml(playlist.name)}</option>`)
-    .join("");
+  const song = getSelectedSong();
+  const selectedPlaylistValue = resolvePlaylistSelection(song);
+  const options = [
+    `<option value="">${escapeHtml(t("selectPlaylist"))}</option>`,
+    ...state.playlists.map(
+      (playlist) => `<option value="${playlist.id}">${escapeHtml(playlist.name)}</option>`,
+    ),
+  ];
+
+  elements.playlistSelect.innerHTML = options.join("");
+  elements.playlistSelect.value = selectedPlaylistValue;
 }
 
 function renderPlayer() {
@@ -2198,6 +2240,33 @@ function getSongById(songId) {
 
 function getPlaylistById(playlistId) {
   return state.playlists.find((playlist) => playlist.id === Number(playlistId)) || null;
+}
+
+function resolvePlaylistSelection(song) {
+  if (!song) {
+    return "";
+  }
+
+  const storedSelection = state.playlistSelectionBySongId[song.id];
+  if (storedSelection === "") {
+    return "";
+  }
+
+  if (storedSelection && getPlaylistById(storedSelection)) {
+    return String(storedSelection);
+  }
+
+  const activePlaylist = getActivePlaylist();
+  if (activePlaylist && activePlaylist.songIds.includes(song.id)) {
+    return String(activePlaylist.id);
+  }
+
+  const matchingPlaylists = state.playlists.filter((playlist) => playlist.songIds.includes(song.id));
+  if (matchingPlaylists.length === 1) {
+    return String(matchingPlaylists[0].id);
+  }
+
+  return "";
 }
 
 function getActiveLyricIndex(song, lineCount) {

@@ -1,7 +1,9 @@
 const { createServer } = require("node:http");
+const { execFile } = require("node:child_process");
 const { DatabaseSync } = require("node:sqlite");
 const fs = require("node:fs");
 const path = require("node:path");
+const { promisify } = require("node:util");
 
 const PORT = Number(process.env.PORT) || 4318;
 const ROOT_DIR = __dirname;
@@ -11,6 +13,7 @@ const DATA_DIR = path.join(ROOT_DIR, "data");
 const COVER_DIR = path.join(DATA_DIR, "covers");
 const DB_PATH = path.join(DATA_DIR, "player.db");
 const MAX_JSON_BYTES = 12 * 1024 * 1024;
+const execFileAsync = promisify(execFile);
 
 const AUDIO_EXTENSIONS = new Set([
   ".aac",
@@ -35,7 +38,7 @@ ensureDirectory(DATA_DIR);
 ensureDirectory(COVER_DIR);
 
 const db = new DatabaseSync(DB_PATH);
-db.exec("PRAGMA journal_mode = WAL;");
+configureDatabase(db);
 initializeDatabase();
 syncLibrary();
 startSourceWatcher();
@@ -69,6 +72,11 @@ const server = createServer(async (req, res) => {
     if (req.method === "POST" && pathname === "/api/library/refresh") {
       syncLibrary();
       return sendJson(res, 200, buildState());
+    }
+
+    if (req.method === "POST" && pathname === "/api/source-folder/open") {
+      await openSourceFolder();
+      return sendJson(res, 200, { ok: true, path: SOURCE_DIR });
     }
 
     const songMatch = pathname.match(/^\/api\/songs\/(\d+)$/);
@@ -198,6 +206,32 @@ function initializeDatabase() {
       PRIMARY KEY (playlist_id, song_id)
     );
   `);
+}
+
+function configureDatabase(database) {
+  database.exec("PRAGMA busy_timeout = 5000;");
+
+  try {
+    database.exec("PRAGMA journal_mode = WAL;");
+  } catch (error) {
+    console.warn(
+      `SQLite WAL mode unavailable for ${DB_PATH}; falling back to DELETE journal mode.`,
+      error.message,
+    );
+
+    database.exec("PRAGMA journal_mode = DELETE;");
+  }
+}
+
+async function openSourceFolder() {
+  const command =
+    process.platform === "darwin" ? "open" : process.platform === "win32" ? "explorer" : "xdg-open";
+
+  try {
+    await execFileAsync(command, [SOURCE_DIR]);
+  } catch (error) {
+    throw new HttpError(500, `Unable to open the source folder.`);
+  }
 }
 
 function syncLibrary() {
