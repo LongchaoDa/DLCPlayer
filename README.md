@@ -1,8 +1,6 @@
 # 78DLC Player
 
-Local web music player for the files in:
-
-`/Users/danielsmith/Documents/1-RL/ASU/research/78DLCPlayer/source`
+Local web music player for the files in this project's `source/` folder.
 
 It scans the folder, lists your MP3 and MP4 files, plays them in the browser, and stores editable song metadata in a small local SQLite database.
 
@@ -28,7 +26,7 @@ It scans the folder, lists your MP3 and MP4 files, plays them in the browser, an
 
 ## Requirements
 
-- Node.js 25 or newer
+- Node.js 24 or newer
 
 This app uses built-in Node modules only. No `npm install` step is required for the current version.
 
@@ -37,18 +35,22 @@ This app uses built-in Node modules only. No `npm install` step is required for 
 From this folder:
 
 ```bash
-npm start
-```
-
-Or:
-
-```bash
 node server.js
 ```
 
 Then open:
 
 `http://localhost:4318`
+
+On macOS, you can also double-click `start.command`.
+
+On Windows, you can double-click `start.bat`.
+
+If your Node install includes npm, `npm start` also works.
+
+## Music Source
+
+- Shared music folder: https://drive.google.com/drive/folders/1BafAOZrEUhHe2PwrG5n1KhEaS1pF6TOg?usp=sharing
 
 ## Notes
 

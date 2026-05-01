@@ -89,6 +89,10 @@ img {
   display: block;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 ::selection {
   background: rgba(74, 143, 231, 0.18);
 }
