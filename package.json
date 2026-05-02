@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "dev": "node server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "import:metadata": "node utils/import_metadata_from_db.js"
   },
   "keywords": [],
   "author": "",

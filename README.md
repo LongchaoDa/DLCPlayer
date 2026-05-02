@@ -52,6 +52,16 @@ If your Node install includes npm, `npm start` also works.
 
 - Shared music folder: https://drive.google.com/drive/folders/1BafAOZrEUhHe2PwrG5n1KhEaS1pF6TOg?usp=sharing
 
+## Restore Local Metadata
+
+If you have an old `player.db`, you can restore local song metadata such as lyrics, notes, artists, and cover references into the current database:
+
+```bash
+npm run import:metadata -- /path/to/old/player.db /path/to/old/covers
+```
+
+The import matches songs by file name and only fills empty fields in the current database.
+
 ## Notes
 
 - Source media is read from `source/`
