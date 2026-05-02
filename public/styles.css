@@ -1210,6 +1210,13 @@ img {
   pointer-events: none;
 }
 
+.secondary-button:disabled,
+.primary-button:disabled,
+.table-action:disabled {
+  opacity: 0.58;
+  pointer-events: none;
+}
+
 .song-form,
 .form-grid,
 .form-actions,
@@ -1251,6 +1258,32 @@ img {
 
 .form-actions {
   grid-template-columns: 1fr;
+}
+
+.metadata-review {
+  display: grid;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid rgba(74, 143, 231, 0.24);
+  border-radius: var(--radius-8);
+  background: rgba(74, 143, 231, 0.06);
+}
+
+.metadata-review[hidden] {
+  display: none;
+}
+
+.metadata-review p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.metadata-review-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
 }
 
 .playlist-assign-row {
@@ -1587,6 +1620,11 @@ img {
   display: none;
 }
 
+.immersive-review {
+  margin: 0 0 24px;
+  max-width: 620px;
+}
+
 .immersive-meta-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(120px, 1fr));
@@ -1733,6 +1771,55 @@ img {
   color: #fff;
   box-shadow: var(--shadow-md);
   z-index: 30;
+}
+
+.blocking-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: rgba(239, 247, 255, 0.58);
+  backdrop-filter: blur(4px);
+  cursor: wait;
+}
+
+.blocking-loader[hidden] {
+  display: none;
+}
+
+.blocking-loader-card {
+  min-width: 232px;
+  min-height: 64px;
+  padding: 12px 18px 12px 12px;
+  border: 1px solid rgba(199, 219, 239, 0.92);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 18px 42px rgba(42, 67, 96, 0.16);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.blocking-loader-card img {
+  width: 42px;
+  height: 42px;
+  image-rendering: auto;
+  flex: 0 0 auto;
+}
+
+.blocking-loader-card span {
+  color: #253445;
+  font-family: var(--font-text-stack);
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+body.is-blocked {
+  overflow: hidden;
 }
 
 .empty-state {

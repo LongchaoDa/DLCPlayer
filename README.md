@@ -22,6 +22,12 @@ It scans the folder, lists your MP3 and MP4 files, plays them in the browser, an
 - Cover upload and removal
 - Playlist creation and song assignment
 - Recent play history
+- Auto Fetch metadata preview:
+  - searches online sources for title, artist, album, cover art, and synced lyrics
+  - shows the fetched result as a preview before saving
+  - lets you `Save Fetched` or `Abandon` if the match is wrong
+- Auto Fetch is available in both the editor drawer and immersive playback view
+- Blocking fetch overlay with a running dragon loader and live stage text during metadata retrieval
 - Local metadata DB stored at `data/player.db`
 
 ## Requirements
@@ -61,6 +67,41 @@ npm run import:metadata -- /path/to/old/player.db /path/to/old/covers
 ```
 
 The import matches songs by file name and only fills empty fields in the current database.
+
+## Auto Fetch Metadata
+
+The app includes an online metadata retrieval flow for songs that still have incomplete local information.
+
+![Auto Fetch Metadata workflow](docs/images/auto-fetch-workflow-paper.png)
+
+What it does:
+
+- Tries to match the selected song against online catalog data
+- Pulls candidate values for:
+  - display title
+  - artist
+  - album
+  - cover art
+  - synced lyrics when available
+- Shows the fetched result as a temporary preview first
+- Requires an explicit save step before the database is updated
+
+How the workflow behaves:
+
+1. Click `Auto Fetch` from either the editor drawer or immersive playback view.
+2. A blocking loading overlay appears with the dragon animation and stage text so the current fetch cannot be interrupted by accidental edits.
+3. The app requests a preview from the server instead of saving immediately.
+4. If a usable match is found, the UI shows the fetched metadata as a temporary preview.
+5. You can then choose:
+   - `Save Fetched` to write the fetched values into `data/player.db`
+   - `Abandon` to discard the fetched result and restore the original local values
+
+Current online sources:
+
+- iTunes Search for title, artist, album, and cover candidates
+- LRCLIB for plain lyrics and synced timestamped lyrics
+
+This preview-first workflow is intentionally conservative so incorrect matches can be rejected before they touch your local metadata.
 
 ## Notes
 

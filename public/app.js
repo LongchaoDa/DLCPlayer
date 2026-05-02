@@ -45,6 +45,15 @@ const MESSAGES = {
     notes: "Info / Notes",
     lyrics: "Lyrics",
     saveSong: "Save Song",
+    autoFetch: "Auto Fetch",
+    autoFetchSearching: "Fetching...",
+    fetchStagePrepare: "Waking the little dragon...",
+    fetchStageCatalog: "Searching online catalogs...",
+    fetchStageLyrics: "Matching synced lyrics...",
+    fetchStagePreview: "Preparing preview...",
+    fetchStageSaving: "Saving selected metadata...",
+    saveFetched: "Save Fetched",
+    abandonFetched: "Abandon",
     uploadCover: "Upload Cover",
     replaceCover: "Replace Cover",
     removeCover: "Remove Cover",
@@ -89,6 +98,10 @@ const MESSAGES = {
     lyricsButton: "Lyrics",
     sourceSynced: "Source synced",
     songSaved: "Song details saved.",
+    metadataFetched: "Online metadata updated.",
+    metadataReady: "Review fetched metadata before saving.",
+    metadataNotFound: "No online metadata found.",
+    metadataAbandoned: "Fetched metadata abandoned.",
     coverUpdated: "Cover updated.",
     coverRemoved: "Cover removed.",
     playlistCreated: "Playlist created.",
@@ -162,6 +175,15 @@ const MESSAGES = {
     notes: "信息 / 备注",
     lyrics: "歌词",
     saveSong: "保存歌曲",
+    autoFetch: "自动获取",
+    autoFetchSearching: "获取中...",
+    fetchStagePrepare: "正在唤醒小红龙...",
+    fetchStageCatalog: "正在搜索在线曲库...",
+    fetchStageLyrics: "正在匹配同步歌词...",
+    fetchStagePreview: "正在整理预览...",
+    fetchStageSaving: "正在保存选择的信息...",
+    saveFetched: "保存获取结果",
+    abandonFetched: "放弃",
     uploadCover: "上传封面",
     replaceCover: "更换封面",
     removeCover: "删除封面",
@@ -206,6 +228,10 @@ const MESSAGES = {
     lyricsButton: "歌词",
     sourceSynced: "source 已同步",
     songSaved: "歌曲信息已保存。",
+    metadataFetched: "已更新在线歌曲信息。",
+    metadataReady: "请检查获取到的信息，再决定是否保存。",
+    metadataNotFound: "没有找到在线歌曲信息。",
+    metadataAbandoned: "已放弃获取到的信息。",
     coverUpdated: "封面已更新。",
     coverRemoved: "封面已删除。",
     playlistCreated: "歌单已创建。",
@@ -266,12 +292,15 @@ const state = {
   shuffleQueueKey: "",
   shuffleIndex: -1,
   playlistSelectionBySongId: {},
+  metadataPreview: null,
 };
 
 const durationProbeQueue = [];
 const durationProbeIds = new Set();
 let durationProbeActive = 0;
 let toastTimer = null;
+let blockingLoaderTimer = null;
+let blockingLoaderStageIndex = 0;
 
 const elements = {
   appShell: document.querySelector("#app-shell"),
@@ -357,6 +386,11 @@ const elements = {
   labelNotes: document.querySelector("#label-notes"),
   labelLyrics: document.querySelector("#label-lyrics"),
   saveSongLabel: document.querySelector("#save-song-label"),
+  autoFetchMetadataButton: document.querySelector("#auto-fetch-metadata-button"),
+  metadataReview: document.querySelector("#metadata-review"),
+  metadataReviewText: document.querySelector("#metadata-review-text"),
+  saveFetchedMetadataButton: document.querySelector("#save-fetched-metadata-button"),
+  abandonFetchedMetadataButton: document.querySelector("#abandon-fetched-metadata-button"),
   uploadCoverButton: document.querySelector("#upload-cover-button"),
   removeCoverButton: document.querySelector("#remove-cover-button"),
   playlistSelect: document.querySelector("#playlist-select"),
@@ -388,10 +422,15 @@ const elements = {
   immersiveCoverImage: document.querySelector("#immersive-cover-image"),
   immersiveCoverPlaceholder: document.querySelector("#immersive-cover-placeholder"),
   immersiveEditButton: document.querySelector("#immersive-edit-button"),
+  immersiveAutoFetchButton: document.querySelector("#immersive-auto-fetch-button"),
   immersiveUploadButton: document.querySelector("#immersive-upload-button"),
   immersiveTypeLabel: document.querySelector("#immersive-type-label"),
   immersiveTitle: document.querySelector("#immersive-title"),
   immersiveSubtitle: document.querySelector("#immersive-subtitle"),
+  immersiveMetadataReview: document.querySelector("#immersive-metadata-review"),
+  immersiveMetadataReviewText: document.querySelector("#immersive-metadata-review-text"),
+  immersiveSaveFetchedButton: document.querySelector("#immersive-save-fetched-button"),
+  immersiveAbandonFetchedButton: document.querySelector("#immersive-abandon-fetched-button"),
   immersiveArtistLabel: document.querySelector("#immersive-artist-label"),
   immersiveAlbumLabel: document.querySelector("#immersive-album-label"),
   immersiveSourceLabel: document.querySelector("#immersive-source-label"),
@@ -404,6 +443,8 @@ const elements = {
   coverUploadInput: document.querySelector("#cover-upload-input"),
   mediaElement: document.querySelector("#media-element"),
   toast: document.querySelector("#toast"),
+  blockingLoader: document.querySelector("#blocking-loader"),
+  blockingLoaderText: document.querySelector("#blocking-loader-text"),
   playlistMenu: document.querySelector("#playlist-menu"),
   playlistMenuRename: document.querySelector("#playlist-menu-rename"),
   playlistMenuDelete: document.querySelector("#playlist-menu-delete"),
@@ -749,11 +790,30 @@ function bindEvents() {
         method: "PATCH",
         body: JSON.stringify(payload),
       });
+      state.metadataPreview = null;
       applyState(nextState);
       showToast(t("songSaved"));
     } catch (error) {
       showToast(error.message);
     }
+  });
+
+  elements.autoFetchMetadataButton.addEventListener("click", () => {
+    const selectedSong = getSelectedSong();
+    if (!selectedSong) {
+      showToast(t("chooseSongFirst"));
+      return;
+    }
+
+    previewSongMetadata(selectedSong.id, "editor");
+  });
+
+  elements.saveFetchedMetadataButton.addEventListener("click", () => {
+    saveFetchedMetadata();
+  });
+
+  elements.abandonFetchedMetadataButton.addEventListener("click", () => {
+    abandonFetchedMetadata();
   });
 
   elements.uploadCoverButton.addEventListener("click", () => {
@@ -772,6 +832,25 @@ function bindEvents() {
     }
 
     elements.coverUploadInput.click();
+  });
+
+  elements.immersiveAutoFetchButton.addEventListener("click", () => {
+    const song = getCurrentSong() || getSelectedSong();
+    if (!song) {
+      showToast(t("chooseSongFirst"));
+      return;
+    }
+
+    state.selectedSongId = song.id;
+    previewSongMetadata(song.id, "immersive");
+  });
+
+  elements.immersiveSaveFetchedButton.addEventListener("click", () => {
+    saveFetchedMetadata();
+  });
+
+  elements.immersiveAbandonFetchedButton.addEventListener("click", () => {
+    abandonFetchedMetadata();
   });
 
   elements.coverUploadInput.addEventListener("change", async () => {
@@ -1113,6 +1192,9 @@ function renderStaticCopy() {
   elements.labelNotes.textContent = t("notes");
   elements.labelLyrics.textContent = t("lyrics");
   elements.saveSongLabel.textContent = t("saveSong");
+  elements.autoFetchMetadataButton.textContent = t("autoFetch");
+  elements.saveFetchedMetadataButton.textContent = t("saveFetched");
+  elements.abandonFetchedMetadataButton.textContent = t("abandonFetched");
   elements.uploadCoverButton.textContent = t("uploadCover");
   elements.removeCoverButton.textContent = t("removeCover");
   elements.addToPlaylistButton.textContent = t("addToList");
@@ -1122,7 +1204,10 @@ function renderStaticCopy() {
   elements.playerImmersiveButton.title = t("immersive");
   elements.immersiveKicker.textContent = t("immersivePlayback");
   elements.immersiveEditButton.textContent = t("editSelected");
+  elements.immersiveAutoFetchButton.textContent = t("autoFetch");
   elements.immersiveUploadButton.textContent = t("uploadCover");
+  elements.immersiveSaveFetchedButton.textContent = t("saveFetched");
+  elements.immersiveAbandonFetchedButton.textContent = t("abandonFetched");
   elements.immersiveArtistLabel.textContent = t("artist");
   elements.immersiveAlbumLabel.textContent = t("album");
   elements.immersiveSourceLabel.textContent = t("format");
@@ -1483,6 +1568,7 @@ async function submitPlaylistDialog() {
 
 function renderEditorPanel() {
   const song = getSelectedSong();
+  const previewSong = getMetadataPreviewSong(song);
   const hasSong = Boolean(song);
   elements.editorPanel.classList.toggle("is-open", state.editorOpen);
   elements.editorPanel.setAttribute("aria-hidden", String(!state.editorOpen));
@@ -1508,32 +1594,35 @@ function renderEditorPanel() {
     elements.uploadCoverButton.textContent = t("uploadCover");
     elements.removeCoverButton.textContent = t("removeCover");
     elements.removeCoverButton.disabled = true;
+    renderMetadataReview("editor", null);
     renderCoverSurface(null, t("chooseSong"), elements.coverImage, elements.coverPlaceholder);
     renderPlaylistSelect();
     renderLyricsPreview();
     return;
   }
 
-  elements.detailTitle.textContent = song.displayTitle;
+  const formSong = previewSong || song;
+  elements.detailTitle.textContent = formSong.displayTitle;
   elements.detailBadge.textContent = song.mediaKind;
-  elements.displayTitleInput.value = song.displayTitle;
+  elements.displayTitleInput.value = formSong.displayTitle;
   elements.fileStemInput.value = song.fileStem;
   elements.fileExtensionLabel.textContent = pathExtension(song.fileName);
-  elements.artistInput.value = song.artist;
-  elements.albumInput.value = song.album;
-  elements.notesInput.value = song.notes;
-  elements.lyricsInput.value = song.lyrics;
+  elements.artistInput.value = formSong.artist;
+  elements.albumInput.value = formSong.album;
+  elements.notesInput.value = formSong.notes;
+  elements.lyricsInput.value = formSong.lyrics;
   elements.uploadCoverButton.textContent = song.coverUrl ? t("replaceCover") : t("uploadCover");
   elements.removeCoverButton.textContent = t("removeCover");
   elements.removeCoverButton.disabled = !song.coverUrl;
-  renderCoverSurface(song, song.displayTitle, elements.coverImage, elements.coverPlaceholder);
+  renderMetadataReview("editor", song);
+  renderCoverSurface(formSong, formSong.displayTitle, elements.coverImage, elements.coverPlaceholder);
   renderPlaylistSelect();
   renderLyricsPreview();
 }
 
 function renderLyricsPreview() {
   const song = getSelectedSong();
-  renderLyricsBlock(song, elements.lyricsPreview, { immersive: false });
+  renderLyricsBlock(getMetadataPreviewSong(song) || song, elements.lyricsPreview, { immersive: false });
 }
 
 function renderPlaylistSelect() {
@@ -1553,6 +1642,145 @@ function renderPlaylistSelect() {
 
   elements.playlistSelect.innerHTML = options.join("");
   elements.playlistSelect.value = selectedPlaylistValue;
+}
+
+function renderMetadataReview(surface, song) {
+  const preview = song ? getMetadataPreviewForSong(song.id) : null;
+  const container =
+    surface === "immersive" ? elements.immersiveMetadataReview : elements.metadataReview;
+  const textElement =
+    surface === "immersive" ? elements.immersiveMetadataReviewText : elements.metadataReviewText;
+
+  if (!preview) {
+    container.hidden = true;
+    textElement.textContent = "";
+    return;
+  }
+
+  container.hidden = false;
+  const fieldLabel = preview.enrichment.fields.length
+    ? preview.enrichment.fields.join(", ")
+    : "metadata";
+  const sourceLabel = preview.enrichment.sources.length
+    ? preview.enrichment.sources.join(" + ")
+    : "online source";
+  textElement.textContent = `${t("metadataReady")} ${fieldLabel} / ${sourceLabel}`;
+}
+
+function getMetadataPreviewForSong(songId) {
+  return state.metadataPreview?.songId === songId ? state.metadataPreview : null;
+}
+
+function getMetadataPreviewSong(song) {
+  const preview = song ? getMetadataPreviewForSong(song.id) : null;
+  if (!preview) {
+    return null;
+  }
+
+  const values = preview.enrichment.values || {};
+  return {
+    ...song,
+    displayTitle: values.displayTitle || song.displayTitle,
+    artist: values.artist || "",
+    album: values.album || "",
+    notes: values.notes || "",
+    lyrics: values.lyrics || "",
+    coverUrl: preview.enrichment.coverSourceUrl || song.coverUrl,
+  };
+}
+
+async function previewSongMetadata(songId, surface) {
+  const triggerButton =
+    surface === "immersive" ? elements.immersiveAutoFetchButton : elements.autoFetchMetadataButton;
+  triggerButton.disabled = true;
+  showBlockingLoader(["fetchStagePrepare", "fetchStageCatalog", "fetchStageLyrics", "fetchStagePreview"]);
+
+  try {
+    const payload = await fetchJson(`/api/songs/${songId}/enrich/preview`, { method: "POST" });
+    if (!payload.enrichment?.updated) {
+      state.metadataPreview = null;
+      renderAll();
+      showToast(t("metadataNotFound"));
+      return;
+    }
+
+    state.metadataPreview = {
+      songId,
+      surface,
+      enrichment: payload.enrichment,
+    };
+    renderAll();
+    showToast(t("metadataReady"));
+  } catch (error) {
+    showToast(error.message);
+  } finally {
+    hideBlockingLoader();
+    triggerButton.disabled = false;
+    triggerButton.textContent = t("autoFetch");
+  }
+}
+
+async function saveFetchedMetadata() {
+  const preview = state.metadataPreview;
+  if (!preview) {
+    return;
+  }
+
+  elements.saveFetchedMetadataButton.disabled = true;
+  elements.immersiveSaveFetchedButton.disabled = true;
+  showBlockingLoader(["fetchStageSaving", "fetchStageLyrics", "fetchStagePreview"]);
+
+  try {
+    const payload = await fetchJson(`/api/songs/${preview.songId}/enrich`, {
+      method: "POST",
+      body: JSON.stringify({ enrichment: preview.enrichment }),
+    });
+    state.metadataPreview = null;
+    applyState(payload.state);
+    showToast(payload.enrichment?.updated ? t("metadataFetched") : t("metadataNotFound"));
+  } catch (error) {
+    showToast(error.message);
+  } finally {
+    hideBlockingLoader();
+    elements.saveFetchedMetadataButton.disabled = false;
+    elements.immersiveSaveFetchedButton.disabled = false;
+  }
+}
+
+function abandonFetchedMetadata() {
+  if (!state.metadataPreview) {
+    return;
+  }
+
+  state.metadataPreview = null;
+  renderAll();
+  showToast(t("metadataAbandoned"));
+}
+
+function showBlockingLoader(stageKeys) {
+  const stages = stageKeys.length ? stageKeys : ["fetchStagePrepare"];
+  clearInterval(blockingLoaderTimer);
+  blockingLoaderStageIndex = 0;
+  elements.blockingLoader.hidden = false;
+  document.body.classList.add("is-blocked");
+
+  const updateStage = () => {
+    const key = stages[Math.min(blockingLoaderStageIndex, stages.length - 1)];
+    elements.blockingLoaderText.textContent = t(key);
+    if (blockingLoaderStageIndex < stages.length - 1) {
+      blockingLoaderStageIndex += 1;
+    }
+  };
+
+  updateStage();
+  blockingLoaderTimer = setInterval(updateStage, 1500);
+}
+
+function hideBlockingLoader() {
+  clearInterval(blockingLoaderTimer);
+  blockingLoaderTimer = null;
+  elements.blockingLoader.hidden = true;
+  document.body.classList.remove("is-blocked");
 }
 
 function renderPlayer() {
@@ -1587,6 +1815,7 @@ function renderPlayer() {
 
 function renderImmersive() {
   const song = getCurrentSong() || getSelectedSong();
+  const previewSong = getMetadataPreviewSong(song);
   elements.immersiveOverlay.classList.toggle("is-open", state.immersiveOpen);
   elements.immersiveOverlay.setAttribute("aria-hidden", String(!state.immersiveOpen));
 
@@ -1599,16 +1828,18 @@ function renderImmersive() {
     elements.immersiveSource.textContent = "-";
     elements.immersiveProgressLabel.textContent = "0:00 / 0:00";
     elements.immersiveDisc.classList.remove("is-spinning");
+    renderMetadataReview("immersive", null);
     renderCoverSurface(null, t("nothingSelected"), elements.immersiveCoverImage, elements.immersiveCoverPlaceholder);
     elements.immersiveLyrics.innerHTML = `<p class="lyrics-empty">${escapeHtml(t("immersiveEmpty"))}</p>`;
     return;
   }
 
+  const displaySong = previewSong || song;
   elements.immersiveTypeLabel.textContent = state.currentSongId === song.id ? t("nowPlaying") : t("selectedSong");
-  elements.immersiveTitle.textContent = song.displayTitle;
-  elements.immersiveSubtitle.textContent = buildSongMetaLine(song);
-  elements.immersiveArtist.textContent = song.artist || "-";
-  elements.immersiveAlbum.textContent = song.album || "-";
+  elements.immersiveTitle.textContent = displaySong.displayTitle;
+  elements.immersiveSubtitle.textContent = buildSongMetaLine(displaySong);
+  elements.immersiveArtist.textContent = displaySong.artist || "-";
+  elements.immersiveAlbum.textContent = displaySong.album || "-";
   elements.immersiveSource.textContent = getSongTypeLabel(song);
   elements.immersiveProgressLabel.textContent = `${formatTime(state.currentTime)} / ${formatTime(
     state.duration || state.durationCache[song.id] || 0,
@@ -1617,8 +1848,9 @@ function renderImmersive() {
     "is-spinning",
     state.currentSongId === song.id && state.isPlaying,
   );
-  renderCoverSurface(song, song.displayTitle, elements.immersiveCoverImage, elements.immersiveCoverPlaceholder);
-  renderLyricsBlock(song, elements.immersiveLyrics, { immersive: true });
+  renderMetadataReview("immersive", song);
+  renderCoverSurface(displaySong, displaySong.displayTitle, elements.immersiveCoverImage, elements.immersiveCoverPlaceholder);
+  renderLyricsBlock(displaySong, elements.immersiveLyrics, { immersive: true });
 }
 
 function renderPlaybackModeControl() {
@@ -2187,10 +2419,13 @@ function renderLyricsBlock(song, container, { immersive }) {
     return;
   }
 
-  const lines = song.lyrics
-    .split("\n")
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0);
+  const timedLines = parseTimedLyrics(song.lyrics);
+  const lines = timedLines.length
+    ? timedLines.map((line) => line.text)
+    : song.lyrics
+        .split("\n")
+        .map((line) => line.trim())
+        .filter((line) => line.length > 0);
 
   if (!lines.length) {
     container.innerHTML = `<p class="lyrics-empty">${escapeHtml(
@@ -2200,7 +2435,10 @@ function renderLyricsBlock(song, container, { immersive }) {
     return;
   }
 
-  const activeIndex = getActiveLyricIndex(song, lines.length);
+  const activeIndex =
+    timedLines.length && state.currentSongId === song.id
+      ? getTimedLyricIndex(timedLines)
+      : getActiveLyricIndex(song, lines.length);
   container.innerHTML = lines
     .map((line, index) => {
       const active = index === activeIndex ? " is-active" : "";
@@ -2381,6 +2619,49 @@ function getActiveLyricIndex(song, lineCount) {
 
   const progress = Math.max(0, Math.min(1, state.currentTime / state.duration));
   return Math.min(lineCount - 1, Math.floor(progress * lineCount));
+}
+
+function getTimedLyricIndex(lines) {
+  if (!lines.length || !state.currentTime) {
+    return 0;
+  }
+
+  let activeIndex = 0;
+  for (let index = 0; index < lines.length; index += 1) {
+    if (lines[index].time > state.currentTime + 0.12) {
+      break;
+    }
+
+    activeIndex = index;
+  }
+
+  return activeIndex;
+}
+
+function parseTimedLyrics(lyrics) {
+  const timedLines = [];
+  const timestampPattern = /\[(\d{1,2}):(\d{2}(?:\.\d{1,3})?)\]/g;
+
+  for (const rawLine of lyrics.split("\n")) {
+    const matches = [...rawLine.matchAll(timestampPattern)];
+    if (!matches.length) {
+      continue;
+    }
+
+    const text = rawLine.replace(timestampPattern, "").trim();
+    if (!text) {
+      continue;
+    }
+
+    for (const match of matches) {
+      timedLines.push({
+        time: Number(match[1]) * 60 + Number(match[2]),
+        text,
+      });
+    }
+  }
+
+  return timedLines.sort((left, right) => left.time - right.time);
 }
 
 function getSongTypeLabel(song) {

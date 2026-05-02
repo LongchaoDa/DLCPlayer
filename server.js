@@ -4,6 +4,7 @@ const { DatabaseSync } = require("node:sqlite");
 const fs = require("node:fs");
 const path = require("node:path");
 const { promisify } = require("node:util");
+const { fetchSongMetadata, storeRemoteCover } = require("./metadata-enrichment");
 
 const PORT = Number(process.env.PORT) || 4318;
 const ROOT_DIR = __dirname;
@@ -62,6 +63,10 @@ const server = createServer(async (req, res) => {
       return serveStaticFile(res, path.join(PUBLIC_DIR, "app.js"));
     }
 
+    if (req.method === "GET" && pathname.startsWith("/assets/")) {
+      return servePublicAsset(res, pathname.replace("/assets/", ""));
+    }
+
     if (req.method === "GET" && pathname.startsWith("/covers/")) {
       return serveCoverFile(res, pathname.replace("/covers/", ""));
     }
@@ -92,6 +97,19 @@ const server = createServer(async (req, res) => {
       const payload = await readJson(req);
       updateSong(songId, payload);
       return sendJson(res, 200, buildState());
+    }
+
+    const enrichMatch = pathname.match(/^\/api\/songs\/(\d+)\/enrich$/);
+    const enrichPreviewMatch = pathname.match(/^\/api\/songs\/(\d+)\/enrich\/preview$/);
+    if (enrichPreviewMatch && req.method === "POST") {
+      const enrichment = await previewSongMetadata(Number(enrichPreviewMatch[1]));
+      return sendJson(res, 200, { state: buildState(), enrichment });
+    }
+
+    if (enrichMatch && req.method === "POST") {
+      const payload = await readJson(req);
+      const enrichment = await enrichSongMetadata(Number(enrichMatch[1]), payload.enrichment);
+      return sendJson(res, 200, { state: buildState(), enrichment });
     }
 
     const coverMatch = pathname.match(/^\/api\/songs\/(\d+)\/cover$/);
@@ -533,6 +551,104 @@ function removeSongCover(songId) {
   run("UPDATE songs SET cover_path = '', updated_at = CURRENT_TIMESTAMP WHERE id = ?", [songId]);
 }
 
+async function previewSongMetadata(songId) {
+  const song = getSongByIdOrThrow(songId);
+  const enrichment = await fetchSongMetadata(song);
+  return sanitizeEnrichmentForClient(enrichment);
+}
+
+async function enrichSongMetadata(songId, proposedEnrichment = null) {
+  const song = getSongByIdOrThrow(songId);
+  const enrichment = proposedEnrichment
+    ? normalizeProposedEnrichment(song, proposedEnrichment)
+    : await fetchSongMetadata(song, { coverDir: COVER_DIR, downloadCover: true });
+
+  if (!enrichment.updated) {
+    return {
+      updated: false,
+      fields: [],
+      sources: enrichment.sources,
+    };
+  }
+
+  if (enrichment.coverSourceUrl && !song.cover_path && !enrichment.values.coverPath) {
+    enrichment.values.coverPath = await storeRemoteCover(song.id, enrichment.coverSourceUrl, COVER_DIR);
+  }
+
+  run(
+    `
+      UPDATE songs
+      SET
+        display_title = ?,
+        artist = ?,
+        album = ?,
+        notes = ?,
+        lyrics = ?,
+        cover_path = ?,
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `,
+    [
+      enrichment.values.displayTitle,
+      enrichment.values.artist,
+      enrichment.values.album,
+      enrichment.values.notes,
+      enrichment.values.lyrics,
+      enrichment.values.coverPath,
+      song.id,
+    ],
+  );
+
+  return {
+    updated: true,
+    fields: enrichment.fields,
+    sources: enrichment.sources,
+  };
+}
+
+function sanitizeEnrichmentForClient(enrichment) {
+  return {
+    updated: enrichment.updated,
+    fields: enrichment.fields || [],
+    sources: enrichment.sources || [],
+    coverSourceUrl: enrichment.coverSourceUrl || "",
+    values: sanitizeEnrichmentValues(enrichment.values || {}),
+  };
+}
+
+function normalizeProposedEnrichment(song, proposedEnrichment) {
+  const values = sanitizeEnrichmentValues(proposedEnrichment?.values || {});
+  return {
+    updated: Boolean(proposedEnrichment?.updated),
+    fields: Array.isArray(proposedEnrichment?.fields)
+      ? proposedEnrichment.fields.map((field) => String(field || "").trim()).filter(Boolean)
+      : [],
+    sources: Array.isArray(proposedEnrichment?.sources)
+      ? proposedEnrichment.sources.map((source) => String(source || "").trim()).filter(Boolean)
+      : [],
+    coverSourceUrl: String(proposedEnrichment?.coverSourceUrl || "").trim(),
+    values: {
+      displayTitle: values.displayTitle || song.display_title,
+      artist: values.artist,
+      album: values.album,
+      notes: values.notes,
+      lyrics: values.lyrics,
+      coverPath: values.coverPath || song.cover_path,
+    },
+  };
+}
+
+function sanitizeEnrichmentValues(values) {
+  return {
+    displayTitle: String(values.displayTitle || "").trim(),
+    artist: String(values.artist || "").trim(),
+    album: String(values.album || "").trim(),
+    notes: String(values.notes || "").replace(/\r\n/g, "\n").trim(),
+    lyrics: String(values.lyrics || "").replace(/\r\n/g, "\n").trim(),
+    coverPath: String(values.coverPath || "").trim(),
+  };
+}
+
 function recordPlay(songId) {
   getSongByIdOrThrow(songId);
 
@@ -675,6 +791,12 @@ function streamSongMedia(req, res, songId) {
 function serveCoverFile(res, fileName) {
   const safeName = path.basename(fileName);
   const absolutePath = path.join(COVER_DIR, safeName);
+  serveStaticFile(res, absolutePath);
+}
+
+function servePublicAsset(res, fileName) {
+  const safeName = path.basename(fileName);
+  const absolutePath = path.join(PUBLIC_DIR, "assets", safeName);
   serveStaticFile(res, absolutePath);
 }
 

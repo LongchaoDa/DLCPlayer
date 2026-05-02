@@ -352,9 +352,24 @@
               </div>
 
               <div class="form-actions">
+                <button id="auto-fetch-metadata-button" class="secondary-button compact" type="button">
+                  Auto Fetch
+                </button>
                 <button id="save-song-label" class="primary-button compact" type="submit">
                   Save Song
                 </button>
+              </div>
+
+              <div id="metadata-review" class="metadata-review" hidden>
+                <p id="metadata-review-text"></p>
+                <div class="metadata-review-actions">
+                  <button id="save-fetched-metadata-button" class="primary-button compact" type="button">
+                    Save Fetched
+                  </button>
+                  <button id="abandon-fetched-metadata-button" class="secondary-button compact" type="button">
+                    Abandon
+                  </button>
+                </div>
               </div>
             </form>
 
@@ -487,6 +502,9 @@
               <button id="immersive-edit-button" class="secondary-button compact" type="button">
                 Edit
               </button>
+              <button id="immersive-auto-fetch-button" class="secondary-button compact" type="button">
+                Auto Fetch
+              </button>
               <button id="immersive-upload-button" class="secondary-button compact" type="button">
                 Upload Cover
               </button>
@@ -497,6 +515,18 @@
             <span id="immersive-type-label" class="type-chip">Now Playing</span>
             <h2 id="immersive-title">Nothing selected</h2>
             <p id="immersive-subtitle">Pick a song from the library to open the immersive player.</p>
+
+            <div id="immersive-metadata-review" class="metadata-review immersive-review" hidden>
+              <p id="immersive-metadata-review-text"></p>
+              <div class="metadata-review-actions">
+                <button id="immersive-save-fetched-button" class="primary-button compact" type="button">
+                  Save Fetched
+                </button>
+                <button id="immersive-abandon-fetched-button" class="secondary-button compact" type="button">
+                  Abandon
+                </button>
+              </div>
+            </div>
 
             <div class="immersive-meta-grid">
               <div>
@@ -528,6 +558,12 @@
     <input id="cover-upload-input" accept="image/*" hidden type="file" />
     <video id="media-element" hidden playsinline preload="metadata"></video>
     <div id="toast" class="toast" hidden></div>
+    <div id="blocking-loader" class="blocking-loader" hidden aria-live="polite" aria-busy="true">
+      <div class="blocking-loader-card">
+        <img src="/assets/red-dragon-loader.gif" alt="" aria-hidden="true" />
+        <span id="blocking-loader-text">Fetching...</span>
+      </div>
+    </div>
 
     <div id="playlist-menu" class="context-menu" hidden>
       <button id="playlist-menu-rename" class="context-menu-item" type="button">Rename</button>
