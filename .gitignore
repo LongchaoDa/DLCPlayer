@@ -1,8 +1,10 @@
 .DS_Store
 data/*
 !data/.gitkeep
+!data/playlists.seed.json
 !data/covers/
 data/covers/*
 !data/covers/.gitkeep
 source/*
 !source/.gitkeep
+backups/

@@ -12,6 +12,7 @@ const PUBLIC_DIR = path.join(ROOT_DIR, "public");
 const DATA_DIR = path.join(ROOT_DIR, "data");
 const COVER_DIR = path.join(DATA_DIR, "covers");
 const DB_PATH = path.join(DATA_DIR, "player.db");
+const PLAYLIST_SEED_PATH = path.join(DATA_DIR, "playlists.seed.json");
 const MAX_JSON_BYTES = 12 * 1024 * 1024;
 const execFileAsync = promisify(execFile);
 
@@ -41,6 +42,7 @@ const db = new DatabaseSync(DB_PATH);
 configureDatabase(db);
 initializeDatabase();
 syncLibrary();
+seedPlaylistsIfNeeded();
 startSourceWatcher();
 
 const server = createServer(async (req, res) => {
@@ -322,6 +324,68 @@ function syncLibrary() {
   } catch (error) {
     db.exec("ROLLBACK;");
     throw error;
+  }
+}
+
+function seedPlaylistsIfNeeded() {
+  if (!fs.existsSync(PLAYLIST_SEED_PATH)) {
+    return;
+  }
+
+  const playlistCount = queryGet("SELECT COUNT(*) AS value FROM playlists").value;
+  if (Number(playlistCount) > 0) {
+    return;
+  }
+
+  let playlists;
+  try {
+    playlists = JSON.parse(fs.readFileSync(PLAYLIST_SEED_PATH, "utf8"));
+  } catch (error) {
+    console.warn(`Unable to read playlist seed file at ${PLAYLIST_SEED_PATH}:`, error.message);
+    return;
+  }
+
+  if (!Array.isArray(playlists) || !playlists.length) {
+    return;
+  }
+
+  const songsByFileName = new Map(
+    queryAll("SELECT id, file_name FROM songs").map((song) => [song.file_name, song]),
+  );
+
+  db.exec("BEGIN;");
+
+  try {
+    for (const playlist of playlists) {
+      const name = sanitizePlaylistName(playlist?.name);
+      if (!name) {
+        continue;
+      }
+
+      run("INSERT OR IGNORE INTO playlists (name) VALUES (?)", [name]);
+      const savedPlaylist = queryGet("SELECT id FROM playlists WHERE name = ?", [name]);
+      if (!savedPlaylist) {
+        continue;
+      }
+
+      const seededSongs = Array.isArray(playlist.songs) ? playlist.songs : [];
+      for (const [index, fileName] of seededSongs.entries()) {
+        const song = songsByFileName.get(String(fileName));
+        if (!song) {
+          continue;
+        }
+
+        run(
+          "INSERT OR IGNORE INTO playlist_songs (playlist_id, song_id, sort_order) VALUES (?, ?, ?)",
+          [savedPlaylist.id, song.id, index + 1],
+        );
+      }
+    }
+
+    db.exec("COMMIT;");
+  } catch (error) {
+    db.exec("ROLLBACK;");
+    console.warn("Unable to seed playlists:", error.message);
   }
 }
 

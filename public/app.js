@@ -421,6 +421,7 @@ window.addEventListener("DOMContentLoaded", init);
 
 async function init() {
   bindEvents();
+  setupMediaSessionControls();
   renderStaticCopy();
   await loadState({ preserveSelection: false });
 }
@@ -713,6 +714,10 @@ function bindEvents() {
   });
 
   elements.songTableBody.addEventListener("dblclick", async (event) => {
+    if (event.target.closest("[data-action]")) {
+      return;
+    }
+
     const row = event.target.closest("tr[data-song-id]");
     if (!row) {
       return;
@@ -1564,6 +1569,7 @@ function renderPlayer() {
     elements.miniCover.style.backgroundImage = "";
     elements.miniCover.textContent = buildInitials(t("nothingSelected"));
     setPlayButtonState(false);
+    updateMediaSession();
     return;
   }
 
@@ -1576,6 +1582,7 @@ function renderPlayer() {
     state.duration > 0 ? String(Math.round((state.currentTime / state.duration) * 1000)) : "0";
   renderMiniCover(currentSong);
   setPlayButtonState(state.isPlaying);
+  updateMediaSession();
 }
 
 function renderImmersive() {
@@ -1651,6 +1658,104 @@ function renderPlaybackModeControl() {
     <path d="M5 12h.01" />
     <path d="M5 17h.01" />
   `;
+}
+
+function setupMediaSessionControls() {
+  if (!("mediaSession" in navigator)) {
+    return;
+  }
+
+  setMediaSessionAction("play", async () => {
+    const song = getCurrentSong() || getSelectedSong() || getVisibleSongs()[0];
+    if (song) {
+      await playSong(song.id);
+    }
+  });
+  setMediaSessionAction("pause", () => pausePlayback());
+  setMediaSessionAction("previoustrack", () => playRelative(-1));
+  setMediaSessionAction("nexttrack", () => playRelative(1));
+  setMediaSessionAction("seekbackward", () => seekBy(-10));
+  setMediaSessionAction("seekforward", () => seekBy(10));
+  setMediaSessionAction("seekto", (details) => {
+    if (Number.isFinite(details.seekTime)) {
+      seekTo(details.seekTime);
+    }
+  });
+
+  updateMediaSession();
+}
+
+function setMediaSessionAction(action, handler) {
+  try {
+    navigator.mediaSession.setActionHandler(action, handler);
+  } catch (_error) {
+    // Some browsers expose Media Session but not every action.
+  }
+}
+
+function updateMediaSession() {
+  if (!("mediaSession" in navigator)) {
+    return;
+  }
+
+  const song = getCurrentSong();
+  navigator.mediaSession.playbackState = state.isPlaying ? "playing" : "paused";
+
+  if (!song) {
+    return;
+  }
+
+  if (typeof MediaMetadata !== "undefined") {
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: song.displayTitle,
+      artist: song.artist || t("unknownArtist"),
+      album: song.album || t("unsorted"),
+      artwork: song.coverUrl
+        ? [
+            {
+              src: song.coverUrl,
+              sizes: "512x512",
+              type: "image/*",
+            },
+          ]
+        : [],
+    });
+  }
+
+  if (typeof navigator.mediaSession.setPositionState !== "function") {
+    return;
+  }
+
+  const duration = state.duration || state.durationCache[song.id] || elements.mediaElement.duration || 0;
+  if (!Number.isFinite(duration) || duration <= 0) {
+    return;
+  }
+
+  try {
+    navigator.mediaSession.setPositionState({
+      duration,
+      playbackRate: elements.mediaElement.playbackRate || 1,
+      position: Math.min(state.currentTime || 0, duration),
+    });
+  } catch (_error) {
+    // Ignore position updates while metadata is still settling.
+  }
+}
+
+function seekBy(deltaSeconds) {
+  seekTo((elements.mediaElement.currentTime || 0) + deltaSeconds);
+}
+
+function seekTo(nextTime) {
+  if (!Number.isFinite(elements.mediaElement.duration) || !elements.mediaElement.duration) {
+    return;
+  }
+
+  elements.mediaElement.currentTime = Math.min(
+    Math.max(0, nextTime),
+    elements.mediaElement.duration,
+  );
+  updatePlaybackMetrics();
 }
 
 async function playSong(songId, { syncShuffle = true } = {}) {
