@@ -3,7 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#4a8fe7" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="78DLC" />
     <title>78DLC Player</title>
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/assets/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/assets/icon.svg" />
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
@@ -165,6 +171,18 @@
               <span id="refresh-button-label">Rescan</span>
             </button>
 
+            <button id="offline-save-button" class="secondary-button compact" type="button">
+              <span class="ui-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M12 3v11" />
+                  <path d="m8 10 4 4 4-4" />
+                  <path d="M5 18h14" />
+                  <path d="M7 21h10" />
+                </svg>
+              </span>
+              <span id="offline-save-button-label">Save Offline</span>
+            </button>
+
             <button id="settings-button" class="icon-button small" type="button" aria-label="Settings">
               <span class="ui-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
@@ -271,6 +289,160 @@
             </section>
           </section>
 
+          <section id="ktv-panel" class="ktv-panel" aria-labelledby="ktv-panel-title">
+            <div class="panel-heading">
+              <div>
+                <p class="panel-kicker" id="ktv-panel-kicker">KTV Mode</p>
+                <h3 id="ktv-panel-title">KTV Scoring</h3>
+              </div>
+              <div class="panel-heading-actions">
+                <span id="ktv-readiness-pill" class="type-chip ktv-readiness">Lyrics needed</span>
+                <button id="ktv-stage-close" class="icon-button small ktv-stage-close" type="button" aria-label="Close KTV stage">
+                  <span class="ui-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                      <path d="M15 5 8 12l7 7" />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            <div class="ktv-stage">
+              <section class="ktv-selected">
+                <div class="ktv-score-strip" aria-hidden="true">
+                  <span class="ktv-score-avatar ktv-score-avatar-self"></span>
+                  <strong id="ktv-stage-score" class="ktv-stage-score">0</strong>
+                  <span class="ktv-score-track">
+                    <span id="ktv-stage-score-fill" class="ktv-score-fill"></span>
+                    <span class="ktv-score-guest"></span>
+                  </span>
+                </div>
+                <span id="ktv-selected-kicker" class="meta-caption">Selected Song</span>
+                <strong id="ktv-selected-title">Nothing selected</strong>
+                <p id="ktv-selected-meta">Pick a song from the library</p>
+                <div id="ktv-status-line" class="ktv-status-line">Lyrics-gated singing workspace</div>
+              </section>
+
+              <section class="ktv-controls" aria-label="KTV controls">
+                <div id="ktv-task-status" class="ktv-task-status" role="status" aria-live="polite" hidden>
+                  <span class="ktv-task-spinner" aria-hidden="true"></span>
+                  <span class="ktv-task-progress" aria-hidden="true">
+                    <span id="ktv-task-progress-fill"></span>
+                  </span>
+                  <span class="ktv-task-copy">
+                    <strong id="ktv-task-title">Ready</strong>
+                    <span id="ktv-task-detail">Choose a lyric source and prepare the KTV guide.</span>
+                  </span>
+                </div>
+                <div class="ktv-lyric-source" role="group" aria-label="KTV lyric source">
+                  <button id="ktv-lyric-mode-default" class="ktv-mode-option" type="button" data-ktv-lyric-mode="default">
+                    Default lyrics
+                  </button>
+                  <button id="ktv-lyric-mode-extract" class="ktv-mode-option" type="button" data-ktv-lyric-mode="extract">
+                    Extract
+                  </button>
+                </div>
+                <button id="ktv-prepare-button" class="secondary-button compact" type="button">
+                  Prepare stems
+                </button>
+                <button id="ktv-record-button" class="primary-button compact" type="button">
+                  Start singing
+                </button>
+              </section>
+
+              <section class="ktv-monitor-panel">
+                <div class="ktv-section-head">
+                  <strong id="ktv-monitor-title">Live pitch</strong>
+                  <span id="ktv-note-label">--</span>
+                </div>
+                <div class="ktv-tuner">
+                  <div id="ktv-pitch-guide" class="ktv-pitch-guide">
+                    <div id="ktv-reference-pitch-layer" class="ktv-pitch-html-layer ktv-reference-pitch-layer" aria-hidden="true"></div>
+                    <div id="ktv-live-pitch-layer" class="ktv-pitch-html-layer ktv-live-pitch-layer" aria-hidden="true"></div>
+                    <svg id="ktv-pitch-guide-svg" viewBox="0 0 1000 260" preserveAspectRatio="none" role="img" aria-label="Pitch guide">
+                      <defs>
+                        <filter id="ktv-glow-filter" x="-40%" y="-80%" width="180%" height="260%">
+                          <feGaussianBlur stdDeviation="7" result="glow" />
+                          <feMerge>
+                            <feMergeNode in="glow" />
+                            <feMergeNode in="SourceGraphic" />
+                          </feMerge>
+                        </filter>
+                      </defs>
+                      <rect id="ktv-pitch-active-window" class="ktv-pitch-active-window" x="0" y="0" width="0" height="260"></rect>
+                      <g id="ktv-reference-pitch-bars" class="ktv-reference-pitch-bars"></g>
+                      <g id="ktv-live-pitch-bars" class="ktv-live-pitch-bars"></g>
+                      <g id="ktv-note-particles" class="ktv-note-particles"></g>
+                      <path id="ktv-reference-pitch-path" class="ktv-reference-pitch-path"></path>
+                      <path id="ktv-live-pitch-path" class="ktv-live-pitch-path"></path>
+                      <circle id="ktv-pitch-playhead-glow" class="ktv-pitch-playhead-glow" cx="0" cy="130" r="16"></circle>
+                      <line id="ktv-pitch-playhead" class="ktv-pitch-playhead" x1="0" y1="0" x2="0" y2="260"></line>
+                    </svg>
+                    <div id="ktv-countdown" class="ktv-countdown" hidden aria-live="polite">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </div>
+                    <p id="ktv-pitch-guide-empty" class="ktv-pitch-guide-empty">Prepare stems to extract a pitch guide.</p>
+                  </div>
+                  <div class="ktv-tuner-rail" aria-hidden="true">
+                    <span class="ktv-target-line"></span>
+                    <span id="ktv-pitch-marker" class="ktv-pitch-marker"></span>
+                  </div>
+                  <div class="ktv-meter-row">
+                    <span id="ktv-level-label">Level</span>
+                    <meter id="ktv-level-meter" min="0" max="100" value="0"></meter>
+                    <strong id="ktv-level-value">0</strong>
+                  </div>
+                </div>
+              </section>
+
+              <section class="ktv-lyrics-panel">
+                <div class="ktv-section-head">
+                  <strong id="ktv-lyrics-heading">Lyrics</strong>
+                  <span id="ktv-stage-progress-label">0:00 / 0:00</span>
+                </div>
+                <div id="ktv-lyrics" class="ktv-lyrics"></div>
+              </section>
+
+              <section id="ktv-preview-panel" class="ktv-preview-panel" hidden>
+                <div class="ktv-section-head">
+                  <strong id="ktv-preview-title">Recording preview</strong>
+                  <span id="ktv-preview-status">Unsaved</span>
+                </div>
+                <audio id="ktv-preview-audio" controls preload="metadata"></audio>
+                <label class="ktv-save-name">
+                  <span id="ktv-save-name-label">Save as</span>
+                  <input id="ktv-save-name-input" type="text" />
+                </label>
+                <div class="ktv-preview-actions">
+                  <button id="ktv-save-recording-button" class="primary-button compact" type="button">
+                    Save & score
+                  </button>
+                  <button id="ktv-discard-recording-button" class="secondary-button compact" type="button">
+                    Discard
+                  </button>
+                </div>
+              </section>
+
+              <section class="ktv-stems-panel">
+                <div class="ktv-section-head">
+                  <strong id="ktv-stems-title">Separated audio</strong>
+                  <span id="ktv-model-label">Model</span>
+                </div>
+                <div id="ktv-stem-links" class="ktv-stem-links"></div>
+              </section>
+
+              <section class="ktv-score-panel">
+                <div class="ktv-section-head">
+                  <strong id="ktv-result-title">Latest result</strong>
+                  <span id="ktv-confidence-label">Confidence</span>
+                </div>
+                <div id="ktv-score-body" class="ktv-score-body"></div>
+              </section>
+            </div>
+          </section>
+
           <div id="editor-scrim" class="editor-scrim" aria-hidden="true"></div>
 
           <aside class="editor-panel editor-drawer" id="editor-panel" aria-hidden="true">
@@ -344,12 +516,20 @@
                 <textarea id="lyrics-input" name="lyrics" rows="8"></textarea>
               </label>
 
-              <div class="playlist-assign-row">
-                <select id="playlist-select"></select>
-                <button id="add-to-playlist-button" class="secondary-button compact" type="button">
-                  Add To List
-                </button>
-              </div>
+              <section class="playlist-membership-panel">
+                <div class="playlist-membership-head">
+                  <strong id="playlist-membership-label">Included In</strong>
+                </div>
+
+                <div id="playlist-membership-list" class="playlist-membership-list"></div>
+
+                <div class="playlist-assign-row">
+                  <select id="playlist-select"></select>
+                  <button id="add-to-playlist-button" class="secondary-button compact" type="button">
+                    Add To List
+                  </button>
+                </div>
+              </section>
 
               <div class="form-actions">
                 <button id="auto-fetch-metadata-button" class="secondary-button compact" type="button">

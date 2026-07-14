@@ -1,0 +1,19 @@
+{
+  "name": "78DLC Player",
+  "short_name": "78DLC",
+  "description": "Private offline-capable music player for the 78DLC library.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f8fbff",
+  "theme_color": "#4a8fe7",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -12,6 +12,15 @@ const MESSAGES = {
     openSourceFolder: "Open source folder",
     searchPlaceholder: "Search songs, artists, lyrics",
     rescan: "Rescan",
+    offlineSave: "Save Offline",
+    offlineSaving: "Saving...",
+    offlineSaved: "Offline library saved.",
+    offlineReady: "Offline ready",
+    offlineUnsupported: "Offline install is not supported in this browser.",
+    offlineNoSongs: "No songs available to save offline.",
+    offlineProgress: "Saving offline",
+    offlineStorageLow: "Phone storage quota may be too small for the whole library.",
+    offlineFailed: "Offline save failed",
     collection: "Collection",
     playlist: "Playlist",
     recentLabel: "Recently Played",
@@ -27,6 +36,7 @@ const MESSAGES = {
     songsTab: "Songs",
     editorTab: "Editor",
     lyricsTab: "Lyrics",
+    ktvTab: "KTV",
     library: "Library",
     songQueue: "Song Queue",
     localLibrary: "Local library",
@@ -58,6 +68,9 @@ const MESSAGES = {
     replaceCover: "Replace Cover",
     removeCover: "Remove Cover",
     addToList: "Add To List",
+    includedIn: "Included In",
+    noPlaylistMemberships: "Not in any playlists yet.",
+    allPlaylistsAssigned: "Already in all playlists",
     preview: "Preview",
     emptyLyrics: "No lyrics yet. Save lyrics to preview them here.",
     nothingSelected: "Nothing selected",
@@ -90,12 +103,101 @@ const MESSAGES = {
     immersiveEmpty: "Lyrics will appear here after you save them.",
     selectedSong: "Selected Song",
     closeImmersive: "Close immersive view",
+    closeKtvStage: "Close KTV stage",
     settingsSoon: "Settings panel can be added later.",
     queue: "Queue",
     queueMode: "Queue Play",
     shuffleMode: "Shuffle Play",
     repeatOneMode: "Repeat One",
     lyricsButton: "Lyrics",
+    ktvMode: "KTV Mode",
+    ktvScoring: "KTV Scoring",
+    ktvPanelSubtitle: "Lyrics-gated singing workspace",
+    ktvSelectSong: "Select a song for KTV.",
+    ktvReady: "Ready",
+    ktvBlocked: "Lyrics needed",
+    ktvAutoLyrics: "Auto lyrics",
+    ktvSyncedLyrics: "Synced lyrics",
+    ktvPlainLyrics: "Plain lyrics",
+    ktvLyricSource: "Lyric source",
+    ktvUseDefaultLyrics: "Default lyrics",
+    ktvUseExtractLyrics: "Extract",
+    ktvPrepare: "Prepare stems",
+    ktvExtractLyrics: "Extract lyrics",
+    ktvReextractLyrics: "Re-extract",
+    ktvPreparing: "Preparing",
+    ktvPrepared: "Prepared",
+    ktvPrepareFailed: "Prepare failed",
+    ktvPrepareFirst: "Prepare stems before singing.",
+    ktvAutoExtractFirst: "Extract lyrics and prepare stems before singing.",
+    ktvAutoLyricsReady: "Use Prepare to extract lyrics from the original vocal and align the KTV guide.",
+    ktvDefaultLyricsMissing: "Default lyrics are not complete for this song.",
+    ktvAutoExtractUnavailable: "Automatic extraction requires the pretrained ASR model.",
+    ktvStart: "Start singing",
+    ktvStopScore: "Stop & preview",
+    ktvRecording: "Recording",
+    ktvUploadScoring: "Scoring recording",
+    ktvLivePitch: "Live pitch",
+    ktvPitchGuide: "Pitch guide",
+    ktvPitchGuideMissing: "Prepare stems again to extract the pitch guide.",
+    ktvPitchGuideLoading: "Loading pitch guide",
+    ktvPitchGuideEmpty: "No stable source melody was detected yet.",
+    ktvReferencePitch: "Guide",
+    ktvVoicePitch: "Voice",
+    ktvLevel: "Level",
+    ktvNoPitch: "No pitch",
+    ktvInTune: "In tune",
+    ktvSharp: "Sharp",
+    ktvFlat: "Flat",
+    ktvPreview: "Recording preview",
+    ktvUnsaved: "Unsaved",
+    ktvSaveAs: "Save as",
+    ktvSaveRecording: "Save & score",
+    ktvDiscardRecording: "Discard",
+    ktvRecordingReady: "Recording is ready to preview.",
+    ktvRecordingDiscarded: "Recording discarded.",
+    ktvStems: "Separated audio",
+    ktvVocals: "Vocals",
+    ktvAccompaniment: "Accompaniment",
+    ktvBackground: "Background",
+    ktvLatestResult: "Latest result",
+    ktvNoResult: "No KTV result yet.",
+    ktvScore: "Score",
+    ktvTiming: "Timing",
+    ktvEnergy: "Energy",
+    ktvPitch: "Pitch",
+    ktvLyricsScore: "Lyrics",
+    ktvModel: "Model",
+    ktvConfidence: "Confidence",
+    ktvNeedsLyrics: "KTV requires complete lyrics first.",
+    ktvMicUnavailable: "Microphone recording is not available in this browser.",
+    ktvRecordingFailed: "Recording failed",
+    ktvPreparingToast: "KTV preparation started.",
+    ktvAutoPreparingToast: "KTV lyric extraction and stem preparation started.",
+    ktvScoredToast: "KTV score is ready.",
+    ktvTaskSubmitting: "Starting KTV task",
+    ktvTaskSubmittingDetail: "Sending the request to the local model pipeline.",
+    ktvTaskQueued: "Task queued",
+    ktvTaskQueuedDetail: "The KTV pipeline is waiting for the model worker.",
+    ktvTaskSeparating: "Separating vocals and accompaniment",
+    ktvTaskSeparatingDetail: "Building the vocal stem and the backing track for singing.",
+    ktvTaskAligning: "Aligning lyrics",
+    ktvTaskAligningDetail: "Matching the lyric text to the original vocal timing.",
+    ktvTaskExtracting: "Extracting lyrics with ASR",
+    ktvTaskExtractingDetail: "The speech model is listening to the original vocal and aligning lines.",
+    ktvTaskPitch: "Extracting the reference pitch line",
+    ktvTaskPitchDetail: "Detecting the melody from the original vocal for the guide bars.",
+    ktvTaskFinalizing: "Finalizing KTV guide",
+    ktvTaskFinalizingDetail: "Saving extracted lyrics, stems, and pitch guide for this song.",
+    ktvTaskLoadingGuide: "Loading pitch guide",
+    ktvTaskLoadingGuideDetail: "The prepared melody data is being loaded into the stage.",
+    ktvTaskReady: "Ready to sing",
+    ktvTaskReadyDetail: "The backing track, lyrics, and pitch guide are ready.",
+    ktvTaskNeedExtract: "Lyrics need extraction",
+    ktvTaskNeedExtractDetail: "Choose Extract and click Extract lyrics to generate aligned lyrics.",
+    ktvTaskNeedPrepare: "KTV guide not prepared",
+    ktvTaskNeedPrepareDetail: "Prepare stems before starting the performance.",
+    ktvTaskFailed: "KTV task failed",
     sourceSynced: "Source synced",
     songSaved: "Song details saved.",
     metadataFetched: "Online metadata updated.",
@@ -111,7 +213,7 @@ const MESSAGES = {
     selectPlaylist: "Select",
     selectPlaylistFirst: "Select a playlist first.",
     songAdded: "Song added to playlist.",
-    songRemoved: "Song removed from the current list.",
+    songRemoved: "Song removed from playlist.",
     rescanned: "Source folder rescanned.",
     sourceFolderOpened: "Source folder opened.",
     noSongsAvailable: "No songs available in this view.",
@@ -142,6 +244,15 @@ const MESSAGES = {
     openSourceFolder: "打开歌曲目录",
     searchPlaceholder: "搜索歌曲、歌手、歌词",
     rescan: "重新扫描",
+    offlineSave: "离线保存",
+    offlineSaving: "保存中",
+    offlineSaved: "离线曲库已保存。",
+    offlineReady: "已离线",
+    offlineUnsupported: "当前浏览器不支持离线安装。",
+    offlineNoSongs: "当前没有可离线保存的歌曲。",
+    offlineProgress: "正在离线保存",
+    offlineStorageLow: "手机可用缓存空间可能不足以保存整个曲库。",
+    offlineFailed: "离线保存失败",
     collection: "收藏",
     playlist: "歌单",
     recentLabel: "最近播放",
@@ -157,6 +268,7 @@ const MESSAGES = {
     songsTab: "歌曲",
     editorTab: "编辑",
     lyricsTab: "歌词",
+    ktvTab: "KTV",
     library: "音乐库",
     songQueue: "歌曲列表",
     localLibrary: "本地库",
@@ -188,6 +300,9 @@ const MESSAGES = {
     replaceCover: "更换封面",
     removeCover: "删除封面",
     addToList: "加入歌单",
+    includedIn: "收录歌单",
+    noPlaylistMemberships: "还没有被收录进任何歌单。",
+    allPlaylistsAssigned: "已加入所有歌单",
     preview: "预览",
     emptyLyrics: "还没有歌词，保存后会在这里预览。",
     nothingSelected: "未选择歌曲",
@@ -220,12 +335,101 @@ const MESSAGES = {
     immersiveEmpty: "保存歌词后会显示在这里。",
     selectedSong: "已选歌曲",
     closeImmersive: "关闭沉浸模式",
+    closeKtvStage: "关闭 KTV 舞台",
     settingsSoon: "设置面板可以后续再做。",
     queue: "队列",
     queueMode: "顺序播放",
     shuffleMode: "随机播放",
     repeatOneMode: "单曲循环",
     lyricsButton: "歌词",
+    ktvMode: "KTV 模式",
+    ktvScoring: "KTV 评分",
+    ktvPanelSubtitle: "只允许完整歌词歌曲进入",
+    ktvSelectSong: "请选择一首歌进行 KTV。",
+    ktvReady: "可演唱",
+    ktvBlocked: "需要歌词",
+    ktvAutoLyrics: "可自动提词",
+    ktvSyncedLyrics: "同步歌词",
+    ktvPlainLyrics: "完整歌词",
+    ktvLyricSource: "歌词来源",
+    ktvUseDefaultLyrics: "默认歌词",
+    ktvUseExtractLyrics: "自动提取",
+    ktvPrepare: "准备分轨",
+    ktvExtractLyrics: "提取歌词",
+    ktvReextractLyrics: "重新提取",
+    ktvPreparing: "准备中",
+    ktvPrepared: "已准备",
+    ktvPrepareFailed: "准备失败",
+    ktvPrepareFirst: "请先准备分轨再演唱。",
+    ktvAutoExtractFirst: "请先自动提取歌词并准备分轨。",
+    ktvAutoLyricsReady: "点击准备，将从原唱人声自动提取歌词并对齐 KTV 音高线。",
+    ktvDefaultLyricsMissing: "这首歌的默认歌词还不完整。",
+    ktvAutoExtractUnavailable: "自动提取需要 pretrained ASR 模型。",
+    ktvStart: "开始演唱",
+    ktvStopScore: "结束并试听",
+    ktvRecording: "录音中",
+    ktvUploadScoring: "正在评分",
+    ktvLivePitch: "实时音高",
+    ktvPitchGuide: "音高线",
+    ktvPitchGuideMissing: "请重新准备分轨以提取音高线。",
+    ktvPitchGuideLoading: "正在加载音高线",
+    ktvPitchGuideEmpty: "暂未检测到稳定的原唱旋律线。",
+    ktvReferencePitch: "音准提示线",
+    ktvVoicePitch: "人声音高线",
+    ktvLevel: "音量",
+    ktvNoPitch: "未检测到音高",
+    ktvInTune: "音准接近",
+    ktvSharp: "偏高",
+    ktvFlat: "偏低",
+    ktvPreview: "录音试听",
+    ktvUnsaved: "未保存",
+    ktvSaveAs: "保存为",
+    ktvSaveRecording: "保存并评分",
+    ktvDiscardRecording: "丢弃",
+    ktvRecordingReady: "录音已可试听。",
+    ktvRecordingDiscarded: "录音已丢弃。",
+    ktvStems: "分离音轨",
+    ktvVocals: "人声",
+    ktvAccompaniment: "伴奏",
+    ktvBackground: "背景",
+    ktvLatestResult: "最新结果",
+    ktvNoResult: "还没有 KTV 结果。",
+    ktvScore: "总分",
+    ktvTiming: "节奏",
+    ktvEnergy: "音量",
+    ktvPitch: "音高",
+    ktvLyricsScore: "歌词",
+    ktvModel: "模型",
+    ktvConfidence: "置信度",
+    ktvNeedsLyrics: "KTV 需要先补全歌词。",
+    ktvMicUnavailable: "当前浏览器不能录音。",
+    ktvRecordingFailed: "录音失败",
+    ktvPreparingToast: "KTV 分轨任务已开始。",
+    ktvAutoPreparingToast: "KTV 歌词提取和分轨任务已开始。",
+    ktvScoredToast: "KTV 评分完成。",
+    ktvTaskSubmitting: "正在启动 KTV 任务",
+    ktvTaskSubmittingDetail: "正在把请求发送给本地模型管线。",
+    ktvTaskQueued: "任务已排队",
+    ktvTaskQueuedDetail: "正在等待模型工作进程接手。",
+    ktvTaskSeparating: "正在分离人声和伴奏",
+    ktvTaskSeparatingDetail: "正在生成原唱人声、伴奏和背景音轨。",
+    ktvTaskAligning: "正在对齐歌词",
+    ktvTaskAligningDetail: "正在把歌词文本匹配到原唱人声时间轴。",
+    ktvTaskExtracting: "正在用 ASR 提取歌词",
+    ktvTaskExtractingDetail: "语音模型正在识别原唱人声，并自动对齐每一句。",
+    ktvTaskPitch: "正在提取标准音高线",
+    ktvTaskPitchDetail: "正在从原唱人声中检测旋律，生成音准提示条。",
+    ktvTaskFinalizing: "正在生成 KTV 指南",
+    ktvTaskFinalizingDetail: "正在保存提取歌词、分轨和音高线。",
+    ktvTaskLoadingGuide: "正在加载音高线",
+    ktvTaskLoadingGuideDetail: "已完成准备，正在把旋律数据加载到舞台。",
+    ktvTaskReady: "可以开始演唱",
+    ktvTaskReadyDetail: "伴奏、歌词和音高线都已准备好。",
+    ktvTaskNeedExtract: "需要提取歌词",
+    ktvTaskNeedExtractDetail: "选择自动提取后，点击“提取歌词”生成对齐歌词。",
+    ktvTaskNeedPrepare: "还没有准备 KTV 指南",
+    ktvTaskNeedPrepareDetail: "请先准备分轨，再开始演唱。",
+    ktvTaskFailed: "KTV 任务失败",
     sourceSynced: "source 已同步",
     songSaved: "歌曲信息已保存。",
     metadataFetched: "已更新在线歌曲信息。",
@@ -241,7 +445,7 @@ const MESSAGES = {
     selectPlaylist: "选择歌单",
     selectPlaylistFirst: "请先选择歌单。",
     songAdded: "已加入歌单。",
-    songRemoved: "已从当前歌单移除。",
+    songRemoved: "已从歌单移除。",
     rescanned: "已重新扫描 source 文件夹。",
     sourceFolderOpened: "已打开歌曲目录。",
     noSongsAvailable: "当前视图没有可播放歌曲。",
@@ -291,8 +495,43 @@ const state = {
   shuffleOrder: [],
   shuffleQueueKey: "",
   shuffleIndex: -1,
-  playlistSelectionBySongId: {},
+  playlistDraftSelectionBySongId: {},
   metadataPreview: null,
+  offline: {
+    supported: false,
+    saving: false,
+    cachedCount: 0,
+    cachedBytes: 0,
+    lastSavedAt: "",
+    progressDone: 0,
+    progressTotal: 0,
+  },
+  ktvLyricModeBySongId: {},
+  ktv: {
+    assetsBySongId: {},
+    latestSessionsBySongId: {},
+    sessions: [],
+    config: {},
+  },
+  ktvOpen: false,
+  ktvRecording: null,
+  ktvDraftRecording: null,
+  ktvUiTask: null,
+  ktvCountdown: {
+    active: false,
+    step: 0,
+  },
+  ktvPitchGuidesBySongId: {},
+  ktvPitchHistory: [],
+  ktvPitch: {
+    active: false,
+    level: 0,
+    frequency: 0,
+    referenceFrequency: 0,
+    note: "",
+    cents: 0,
+    status: "",
+  },
 };
 
 const durationProbeQueue = [];
@@ -301,6 +540,9 @@ let durationProbeActive = 0;
 let toastTimer = null;
 let blockingLoaderTimer = null;
 let blockingLoaderStageIndex = 0;
+let ktvPollTimer = null;
+let ktvPitchAnimationFrame = null;
+const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 
 const elements = {
   appShell: document.querySelector("#app-shell"),
@@ -333,6 +575,8 @@ const elements = {
   languageButtons: [...document.querySelectorAll(".language-option")],
   refreshButton: document.querySelector("#refresh-button"),
   refreshButtonLabel: document.querySelector("#refresh-button-label"),
+  offlineSaveButton: document.querySelector("#offline-save-button"),
+  offlineSaveButtonLabel: document.querySelector("#offline-save-button-label"),
   settingsButton: document.querySelector("#settings-button"),
   heroLabel: document.querySelector("#hero-label"),
   heroSourceNote: document.querySelector("#hero-source-note"),
@@ -353,6 +597,7 @@ const elements = {
   tabSongs: document.querySelector("#tab-songs"),
   tabEditor: document.querySelector("#tab-editor"),
   tabLyrics: document.querySelector("#tab-lyrics"),
+  tabKtv: document.querySelector("#tab-ktv"),
   songPanelKicker: document.querySelector("#song-panel-kicker"),
   songPanelTitle: document.querySelector("#song-panel-title"),
   songPanelSummary: document.querySelector("#song-panel-summary"),
@@ -363,6 +608,63 @@ const elements = {
   colDuration: document.querySelector("#col-duration"),
   colAction: document.querySelector("#col-action"),
   songTableBody: document.querySelector("#song-table-body"),
+  ktvPanel: document.querySelector("#ktv-panel"),
+  ktvPanelKicker: document.querySelector("#ktv-panel-kicker"),
+  ktvPanelTitle: document.querySelector("#ktv-panel-title"),
+  ktvReadinessPill: document.querySelector("#ktv-readiness-pill"),
+  ktvStageClose: document.querySelector("#ktv-stage-close"),
+  ktvStageScore: document.querySelector("#ktv-stage-score"),
+  ktvStageScoreFill: document.querySelector("#ktv-stage-score-fill"),
+  ktvSelectedKicker: document.querySelector("#ktv-selected-kicker"),
+  ktvSelectedTitle: document.querySelector("#ktv-selected-title"),
+  ktvSelectedMeta: document.querySelector("#ktv-selected-meta"),
+  ktvStatusLine: document.querySelector("#ktv-status-line"),
+  ktvTaskStatus: document.querySelector("#ktv-task-status"),
+  ktvTaskTitle: document.querySelector("#ktv-task-title"),
+  ktvTaskDetail: document.querySelector("#ktv-task-detail"),
+  ktvTaskProgressFill: document.querySelector("#ktv-task-progress-fill"),
+  ktvLyricModeDefaultButton: document.querySelector("#ktv-lyric-mode-default"),
+  ktvLyricModeExtractButton: document.querySelector("#ktv-lyric-mode-extract"),
+  ktvPrepareButton: document.querySelector("#ktv-prepare-button"),
+  ktvRecordButton: document.querySelector("#ktv-record-button"),
+  ktvStopButton: document.querySelector("#ktv-stop-button"),
+  ktvMonitorTitle: document.querySelector("#ktv-monitor-title"),
+  ktvNoteLabel: document.querySelector("#ktv-note-label"),
+  ktvPitchGuide: document.querySelector("#ktv-pitch-guide"),
+  ktvReferencePitchLayer: document.querySelector("#ktv-reference-pitch-layer"),
+  ktvLivePitchLayer: document.querySelector("#ktv-live-pitch-layer"),
+  ktvPitchGuideSvg: document.querySelector("#ktv-pitch-guide-svg"),
+  ktvPitchActiveWindow: document.querySelector("#ktv-pitch-active-window"),
+  ktvReferencePitchBars: document.querySelector("#ktv-reference-pitch-bars"),
+  ktvLivePitchBars: document.querySelector("#ktv-live-pitch-bars"),
+  ktvNoteParticles: document.querySelector("#ktv-note-particles"),
+  ktvReferencePitchPath: document.querySelector("#ktv-reference-pitch-path"),
+  ktvLivePitchPath: document.querySelector("#ktv-live-pitch-path"),
+  ktvPitchPlayheadGlow: document.querySelector("#ktv-pitch-playhead-glow"),
+  ktvPitchPlayhead: document.querySelector("#ktv-pitch-playhead"),
+  ktvCountdown: document.querySelector("#ktv-countdown"),
+  ktvPitchGuideEmpty: document.querySelector("#ktv-pitch-guide-empty"),
+  ktvPitchMarker: document.querySelector("#ktv-pitch-marker"),
+  ktvLevelLabel: document.querySelector("#ktv-level-label"),
+  ktvLevelMeter: document.querySelector("#ktv-level-meter"),
+  ktvLevelValue: document.querySelector("#ktv-level-value"),
+  ktvLyricsHeading: document.querySelector("#ktv-lyrics-heading"),
+  ktvStageProgressLabel: document.querySelector("#ktv-stage-progress-label"),
+  ktvLyrics: document.querySelector("#ktv-lyrics"),
+  ktvPreviewPanel: document.querySelector("#ktv-preview-panel"),
+  ktvPreviewTitle: document.querySelector("#ktv-preview-title"),
+  ktvPreviewStatus: document.querySelector("#ktv-preview-status"),
+  ktvPreviewAudio: document.querySelector("#ktv-preview-audio"),
+  ktvSaveNameLabel: document.querySelector("#ktv-save-name-label"),
+  ktvSaveNameInput: document.querySelector("#ktv-save-name-input"),
+  ktvSaveRecordingButton: document.querySelector("#ktv-save-recording-button"),
+  ktvDiscardRecordingButton: document.querySelector("#ktv-discard-recording-button"),
+  ktvStemsTitle: document.querySelector("#ktv-stems-title"),
+  ktvModelLabel: document.querySelector("#ktv-model-label"),
+  ktvStemLinks: document.querySelector("#ktv-stem-links"),
+  ktvResultTitle: document.querySelector("#ktv-result-title"),
+  ktvConfidenceLabel: document.querySelector("#ktv-confidence-label"),
+  ktvScoreBody: document.querySelector("#ktv-score-body"),
   editorScrim: document.querySelector("#editor-scrim"),
   editorPanel: document.querySelector("#editor-panel"),
   editorPanelKicker: document.querySelector("#editor-panel-kicker"),
@@ -385,6 +687,8 @@ const elements = {
   labelAlbum: document.querySelector("#label-album"),
   labelNotes: document.querySelector("#label-notes"),
   labelLyrics: document.querySelector("#label-lyrics"),
+  playlistMembershipLabel: document.querySelector("#playlist-membership-label"),
+  playlistMembershipList: document.querySelector("#playlist-membership-list"),
   saveSongLabel: document.querySelector("#save-song-label"),
   autoFetchMetadataButton: document.querySelector("#auto-fetch-metadata-button"),
   metadataReview: document.querySelector("#metadata-review"),
@@ -463,8 +767,10 @@ window.addEventListener("DOMContentLoaded", init);
 async function init() {
   bindEvents();
   setupMediaSessionControls();
+  await setupOfflineSupport();
   renderStaticCopy();
   await loadState({ preserveSelection: false });
+  await refreshOfflineCacheStatus();
 }
 
 function bindEvents() {
@@ -664,6 +970,10 @@ function bindEvents() {
     }
   });
 
+  elements.offlineSaveButton?.addEventListener("click", () => {
+    saveLibraryForOffline();
+  });
+
   elements.heroPlay.addEventListener("click", async () => {
     const firstSong = getVisibleSongs()[0];
     if (!firstSong) {
@@ -725,6 +1035,12 @@ function bindEvents() {
         return;
       }
 
+      if (action === "open-ktv") {
+        state.selectedSongId = songId;
+        focusKtvPanel();
+        return;
+      }
+
       if (action === "remove-from-playlist" && state.activeView.type === "playlist") {
         try {
           const nextState = await fetchJson(
@@ -749,6 +1065,7 @@ function bindEvents() {
     state.selectedSongId = Number(row.dataset.songId);
     renderHeader();
     syncSongTableSelection();
+    renderKtvPanel();
     if (state.editorOpen) {
       renderEditorPanel();
     }
@@ -895,17 +1212,43 @@ function bindEvents() {
     }
   });
 
+  elements.playlistMembershipList.addEventListener("click", async (event) => {
+    const removeButton = event.target.closest("[data-remove-playlist-id]");
+    if (!removeButton) {
+      return;
+    }
+
+    const selectedSong = getSelectedSong();
+    const playlistId = Number(removeButton.dataset.removePlaylistId);
+
+    if (!selectedSong) {
+      showToast(t("chooseSongFirst"));
+      return;
+    }
+
+    try {
+      const nextState = await fetchJson(`/api/playlists/${playlistId}/songs/${selectedSong.id}`, {
+        method: "DELETE",
+      });
+      applyState(nextState);
+      showToast(t("songRemoved"));
+    } catch (error) {
+      showToast(error.message);
+    }
+  });
+
   elements.playlistSelect.addEventListener("change", () => {
     const selectedSong = getSelectedSong();
     if (!selectedSong) {
       return;
     }
 
-    state.playlistSelectionBySongId[selectedSong.id] = elements.playlistSelect.value;
+    state.playlistDraftSelectionBySongId[selectedSong.id] = elements.playlistSelect.value;
   });
 
   elements.addToPlaylistButton.addEventListener("click", async () => {
     const selectedSong = getSelectedSong();
+    const availablePlaylists = getAvailablePlaylistsForSong(selectedSong);
     const playlistId = Number(elements.playlistSelect.value);
 
     if (!selectedSong) {
@@ -913,13 +1256,18 @@ function bindEvents() {
       return;
     }
 
-    if (!playlistId) {
-      showToast(state.playlists.length ? t("selectPlaylistFirst") : t("createPlaylistFirst"));
+    if (!playlistId || !availablePlaylists.some((playlist) => playlist.id === playlistId)) {
+      const message = !state.playlists.length
+        ? t("createPlaylistFirst")
+        : !availablePlaylists.length
+          ? t("allPlaylistsAssigned")
+          : t("selectPlaylistFirst");
+      showToast(message);
       return;
     }
 
     try {
-      state.playlistSelectionBySongId[selectedSong.id] = String(playlistId);
+      state.playlistDraftSelectionBySongId[selectedSong.id] = String(playlistId);
       const nextState = await fetchJson(`/api/playlists/${playlistId}/songs`, {
         method: "POST",
         body: JSON.stringify({ songId: selectedSong.id }),
@@ -928,6 +1276,50 @@ function bindEvents() {
       showToast(t("songAdded"));
     } catch (error) {
       showToast(error.message);
+    }
+  });
+
+  elements.ktvPrepareButton.addEventListener("click", () => {
+    prepareSelectedKtvSong();
+  });
+
+  elements.ktvLyricModeDefaultButton?.addEventListener("click", () => {
+    setSelectedKtvLyricMode("default");
+  });
+
+  elements.ktvLyricModeExtractButton?.addEventListener("click", () => {
+    setSelectedKtvLyricMode("extract");
+  });
+
+  elements.ktvRecordButton.addEventListener("click", () => {
+    const song = getSelectedSong();
+    if (song && state.ktvRecording?.songId === song.id) {
+      stopKtvRecording();
+      return;
+    }
+
+    startSelectedKtvRecording();
+  });
+
+  elements.ktvStopButton?.addEventListener("click", () => {
+    stopKtvRecording();
+  });
+
+  elements.ktvSaveRecordingButton.addEventListener("click", () => {
+    saveDraftKtvRecording();
+  });
+
+  elements.ktvDiscardRecordingButton.addEventListener("click", () => {
+    discardDraftKtvRecording();
+  });
+
+  elements.ktvStageClose.addEventListener("click", () => {
+    closeKtvStage();
+  });
+
+  elements.ktvSaveNameInput.addEventListener("input", () => {
+    if (state.ktvDraftRecording) {
+      state.ktvDraftRecording.name = elements.ktvSaveNameInput.value;
     }
   });
 
@@ -1011,6 +1403,11 @@ function bindEvents() {
 
     if (event.key === "Escape" && state.immersiveOpen) {
       closeImmersive();
+      return;
+    }
+
+    if (event.key === "Escape" && state.ktvOpen) {
+      closeKtvStage();
       return;
     }
 
@@ -1108,6 +1505,13 @@ function applyState(nextState, { preserveSelection = true } = {}) {
   state.songs = nextState.songs;
   state.recentSongIds = nextState.recentSongIds;
   state.playlists = nextState.playlists;
+  state.ktv = nextState.ktv || {
+    assetsBySongId: {},
+    latestSessionsBySongId: {},
+    sessions: [],
+    config: {},
+  };
+  prunePlaylistDraftSelections();
 
   if (state.activeView.type === "playlist" && !getPlaylistById(state.activeView.playlistId)) {
     state.activeView = { type: "likes", playlistId: null };
@@ -1140,6 +1544,10 @@ function applyState(nextState, { preserveSelection = true } = {}) {
 
   warmDurationCache(state.songs);
   renderAll();
+
+  if (hasRunningKtvTask()) {
+    scheduleKtvPolling();
+  }
 }
 
 function renderAll() {
@@ -1148,6 +1556,7 @@ function renderAll() {
   renderSidebar();
   renderHeader();
   renderSongPanel();
+  renderKtvPanel();
   renderEditorPanel();
   renderPlayer();
   renderImmersive();
@@ -1170,12 +1579,17 @@ function renderStaticCopy() {
   elements.sourcePathLabel.textContent = t("sourceFolder");
   elements.searchInput.placeholder = t("searchPlaceholder");
   elements.refreshButtonLabel.textContent = t("rescan");
+  elements.offlineSaveButtonLabel.textContent = t("offlineSave");
   elements.heroPlayLabel.textContent = t("playAll");
   elements.focusEditorLabel.textContent = t("editSelected");
   elements.openImmersiveLabel.textContent = t("immersive");
   elements.tabSongs.textContent = t("songsTab");
   elements.tabEditor.textContent = t("editorTab");
   elements.tabLyrics.textContent = t("lyricsTab");
+  if (elements.tabKtv) {
+    elements.tabKtv.textContent = t("ktvTab");
+  }
+  renderOfflineButton();
   elements.songPanelKicker.textContent = t("library");
   elements.songPanelTitle.textContent = t("songQueue");
   elements.colIndex.textContent = t("index");
@@ -1191,6 +1605,7 @@ function renderStaticCopy() {
   elements.labelAlbum.textContent = t("album");
   elements.labelNotes.textContent = t("notes");
   elements.labelLyrics.textContent = t("lyrics");
+  elements.playlistMembershipLabel.textContent = t("includedIn");
   elements.saveSongLabel.textContent = t("saveSong");
   elements.autoFetchMetadataButton.textContent = t("autoFetch");
   elements.saveFetchedMetadataButton.textContent = t("saveFetched");
@@ -1200,6 +1615,26 @@ function renderStaticCopy() {
   elements.addToPlaylistButton.textContent = t("addToList");
   elements.lyricsPreviewKicker.textContent = t("lyrics");
   elements.lyricsPreviewTitle.textContent = t("preview");
+  elements.ktvPanelKicker.textContent = t("ktvMode");
+  elements.ktvPanelTitle.textContent = t("ktvScoring");
+  elements.ktvSelectedKicker.textContent = t("selectedSong");
+  elements.ktvPrepareButton.textContent = t("ktvPrepare");
+  elements.ktvRecordButton.textContent = t("ktvStart");
+  if (elements.ktvStopButton) {
+    elements.ktvStopButton.textContent = t("ktvStopScore");
+  }
+  elements.ktvMonitorTitle.textContent = t("ktvLivePitch");
+  elements.ktvPitchGuideSvg.setAttribute("aria-label", t("ktvPitchGuide"));
+  elements.ktvPitchGuideEmpty.textContent = t("ktvPitchGuideMissing");
+  elements.ktvLevelLabel.textContent = t("ktvLevel");
+  elements.ktvLyricsHeading.textContent = t("lyrics");
+  elements.ktvPreviewTitle.textContent = t("ktvPreview");
+  elements.ktvPreviewStatus.textContent = t("ktvUnsaved");
+  elements.ktvSaveNameLabel.textContent = t("ktvSaveAs");
+  elements.ktvSaveRecordingButton.textContent = t("ktvSaveRecording");
+  elements.ktvDiscardRecordingButton.textContent = t("ktvDiscardRecording");
+  elements.ktvStemsTitle.textContent = t("ktvStems");
+  elements.ktvResultTitle.textContent = t("ktvLatestResult");
   elements.playerLyricsButton.title = t("lyricsButton");
   elements.playerImmersiveButton.title = t("immersive");
   elements.immersiveKicker.textContent = t("immersivePlayback");
@@ -1222,6 +1657,8 @@ function renderStaticCopy() {
   elements.openSourceFolderButton.setAttribute("aria-label", t("openSourceFolder"));
   elements.editorClose.title = t("closeEditor");
   elements.editorClose.setAttribute("aria-label", t("closeEditor"));
+  elements.ktvStageClose.title = t("closeKtvStage");
+  elements.ktvStageClose.setAttribute("aria-label", t("closeKtvStage"));
   elements.sidebarResizer.title = t("sidebarResizeLabel");
   elements.sidebarResizer.setAttribute("aria-label", t("sidebarResizeLabel"));
   elements.playlistMenuRename.textContent = t("rename");
@@ -1450,6 +1887,14 @@ function renderSongPanel() {
               >
                 ${escapeHtml(manageLabel)}
               </button>
+              <button
+                class="table-action subtle"
+                data-action="open-ktv"
+                data-song-id="${song.id}"
+                type="button"
+              >
+                ${escapeHtml(t("ktvTab"))}
+              </button>
             </div>
           </td>
         </tr>
@@ -1596,6 +2041,7 @@ function renderEditorPanel() {
     elements.removeCoverButton.disabled = true;
     renderMetadataReview("editor", null);
     renderCoverSurface(null, t("chooseSong"), elements.coverImage, elements.coverPlaceholder);
+    renderPlaylistMemberships();
     renderPlaylistSelect();
     renderLyricsPreview();
     return;
@@ -1616,6 +2062,7 @@ function renderEditorPanel() {
   elements.removeCoverButton.disabled = !song.coverUrl;
   renderMetadataReview("editor", song);
   renderCoverSurface(formSong, formSong.displayTitle, elements.coverImage, elements.coverPlaceholder);
+  renderPlaylistMemberships();
   renderPlaylistSelect();
   renderLyricsPreview();
 }
@@ -1625,23 +2072,600 @@ function renderLyricsPreview() {
   renderLyricsBlock(getMetadataPreviewSong(song) || song, elements.lyricsPreview, { immersive: false });
 }
 
-function renderPlaylistSelect() {
-  if (!state.playlists.length) {
-    elements.playlistSelect.innerHTML = `<option value="">${escapeHtml(t("noPlaylists"))}</option>`;
+function renderPlaylistMemberships() {
+  const song = getSelectedSong();
+
+  if (!song) {
+    elements.playlistMembershipList.innerHTML = `
+      <p class="playlist-membership-empty">${escapeHtml(t("pickSong"))}</p>
+    `;
     return;
   }
 
+  const memberships = getSongPlaylistMemberships(song);
+  if (!memberships.length) {
+    elements.playlistMembershipList.innerHTML = `
+      <p class="playlist-membership-empty">${escapeHtml(t("noPlaylistMemberships"))}</p>
+    `;
+    return;
+  }
+
+  elements.playlistMembershipList.innerHTML = memberships
+    .map(
+      (playlist) => `
+        <div class="playlist-membership-pill" data-playlist-membership-id="${playlist.id}">
+          <span class="playlist-membership-name">${escapeHtml(playlist.name)}</span>
+          <button
+            class="playlist-membership-remove"
+            type="button"
+            data-remove-playlist-id="${playlist.id}"
+            aria-label="${escapeHtml(`${t("remove")}: ${playlist.name}`)}"
+            title="${escapeHtml(t("remove"))}"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+      `,
+    )
+    .join("");
+}
+
+function renderPlaylistSelect() {
   const song = getSelectedSong();
-  const selectedPlaylistValue = resolvePlaylistSelection(song);
-  const options = [
-    `<option value="">${escapeHtml(t("selectPlaylist"))}</option>`,
-    ...state.playlists.map(
-      (playlist) => `<option value="${playlist.id}">${escapeHtml(playlist.name)}</option>`,
-    ),
+  const availablePlaylists = getAvailablePlaylistsForSong(song);
+  const canAssignPlaylist = Boolean(song) && availablePlaylists.length > 0;
+
+  if (!state.playlists.length) {
+    elements.playlistSelect.innerHTML = `<option value="">${escapeHtml(t("noPlaylists"))}</option>`;
+  } else if (!song) {
+    elements.playlistSelect.innerHTML = `<option value="">${escapeHtml(t("selectPlaylist"))}</option>`;
+  } else if (!availablePlaylists.length) {
+    elements.playlistSelect.innerHTML = `<option value="">${escapeHtml(t("allPlaylistsAssigned"))}</option>`;
+  } else {
+    const selectedPlaylistValue = resolvePlaylistSelection(song, availablePlaylists);
+    const options = [
+      `<option value="">${escapeHtml(t("selectPlaylist"))}</option>`,
+      ...availablePlaylists.map(
+        (playlist) => `<option value="${playlist.id}">${escapeHtml(playlist.name)}</option>`,
+      ),
+    ];
+
+    elements.playlistSelect.innerHTML = options.join("");
+    elements.playlistSelect.value = selectedPlaylistValue;
+  }
+
+  elements.playlistSelect.disabled = !canAssignPlaylist;
+  elements.addToPlaylistButton.disabled = !canAssignPlaylist;
+}
+
+function renderKtvPanel() {
+  const song = getSelectedSong();
+  const readiness = song?.ktvReadiness || { ready: false, reasons: [] };
+  const asset = getKtvAsset(song);
+  const latestSession = getLatestKtvSession(song);
+  const isRecording = Boolean(state.ktvRecording);
+  const isSelectedRecording = isRecording && state.ktvRecording.songId === song?.id;
+  const isPreparing = asset?.status === "running";
+  const isPrepared = asset?.status === "complete" && Boolean(asset.accompanimentUrl) && Boolean(asset.referencePitchUrl);
+  const hasDraftForSong = Boolean(state.ktvDraftRecording && state.ktvDraftRecording.songId === song?.id);
+  const canAutoExtractLyrics = canAutoExtractKtvLyrics();
+  const lyricMode = getKtvLyricMode(song);
+  const isExtractMode = lyricMode === "extract";
+  const canPrepareForKtv = Boolean(isExtractMode ? canAutoExtractLyrics : readiness.ready);
+  const hasUsableLyricSource = Boolean(
+    readiness.ready || (isExtractMode && (canAutoExtractLyrics || asset?.alignmentUrl)),
+  );
+  const canSingWithCurrentLyrics = Boolean(
+    isExtractMode ? asset?.alignmentUrl || canAutoExtractLyrics : readiness.ready,
+  );
+
+  elements.ktvPanel.classList.toggle("is-stage-open", state.ktvOpen);
+  elements.ktvPanel.setAttribute("aria-modal", String(state.ktvOpen));
+  document.body.classList.toggle("is-ktv-stage-open", state.ktvOpen);
+  elements.ktvReadinessPill.classList.toggle("is-ready", hasUsableLyricSource);
+  elements.ktvReadinessPill.classList.toggle("is-blocked", !hasUsableLyricSource);
+  elements.ktvPanelTitle.textContent = state.ktvOpen && song ? song.displayTitle : t("ktvScoring");
+  elements.ktvPanelKicker.textContent = state.ktvOpen ? "KTV" : t("ktvMode");
+
+  if (!song) {
+    renderKtvStageScore(null);
+    elements.ktvReadinessPill.textContent = t("ktvBlocked");
+    elements.ktvReadinessPill.classList.remove("is-stage-scoring");
+    elements.ktvSelectedTitle.textContent = t("nothingSelected");
+    elements.ktvSelectedMeta.textContent = t("ktvSelectSong");
+    elements.ktvStatusLine.textContent = t("ktvPanelSubtitle");
+    renderKtvTaskStatus(null, null);
+    renderKtvLyricModeControls(null, false, false);
+    elements.ktvPrepareButton.disabled = true;
+    elements.ktvRecordButton.disabled = true;
+    elements.ktvRecordButton.classList.remove("is-stage-recording");
+    if (elements.ktvStopButton) {
+      elements.ktvStopButton.disabled = true;
+    }
+    elements.ktvStemLinks.innerHTML = `<p class="ktv-empty">${escapeHtml(t("ktvSelectSong"))}</p>`;
+    elements.ktvStageProgressLabel.textContent = "0:00 / 0:00";
+    elements.ktvLyrics.innerHTML = `<p class="lyrics-empty">${escapeHtml(t("immersiveEmpty"))}</p>`;
+    renderKtvPitchMonitor();
+    renderKtvPitchGuide(null, null);
+    renderKtvCountdown();
+    renderKtvRecordingPreview(null);
+    renderKtvScore(null);
+    return;
+  }
+
+  ensureKtvPitchGuide(song, asset);
+  const canUseExtractLyrics = Boolean(canAutoExtractLyrics || asset?.alignmentUrl);
+  renderKtvLyricModeControls(song, readiness.ready, canUseExtractLyrics);
+  elements.ktvReadinessPill.textContent = isExtractMode
+    ? canUseExtractLyrics
+      ? t("ktvAutoLyrics")
+      : t("ktvBlocked")
+    : readiness.ready
+      ? readiness.level === "synced"
+        ? t("ktvSyncedLyrics")
+        : t("ktvPlainLyrics")
+      : t("ktvBlocked");
+  elements.ktvReadinessPill.classList.toggle("is-stage-scoring", state.ktvOpen && isSelectedRecording);
+  renderKtvStageScore(latestSession);
+  elements.ktvSelectedTitle.textContent = song.displayTitle;
+  elements.ktvSelectedMeta.textContent = buildSongMetaLine(song);
+  elements.ktvStatusLine.textContent = buildKtvStatusLine(song, asset, latestSession);
+  renderKtvTaskStatus(song, asset, {
+    lyricMode,
+    isExtractMode,
+    isPrepared,
+    canPrepareForKtv,
+  });
+  elements.ktvPrepareButton.textContent = state.ktvOpen
+    ? isPreparing
+      ? "准备中"
+      : isPrepared
+        ? isExtractMode
+          ? t("ktvReextractLyrics")
+          : "重录"
+        : isExtractMode
+          ? t("ktvExtractLyrics")
+          : "准备音轨"
+    : isPreparing
+      ? t("ktvPreparing")
+      : isExtractMode
+        ? t("ktvExtractLyrics")
+        : t("ktvPrepare");
+  elements.ktvRecordButton.textContent = isSelectedRecording
+    ? state.ktvOpen
+      ? "完成"
+      : t("ktvRecording")
+    : state.ktvRecording?.status === "uploading"
+      ? t("ktvUploadScoring")
+      : state.ktvOpen
+        ? "开始"
+        : t("ktvStart");
+  if (elements.ktvStopButton) {
+    elements.ktvStopButton.textContent = state.ktvOpen ? "完成" : t("ktvStopScore");
+  }
+  elements.ktvRecordButton.classList.toggle("is-stage-recording", isSelectedRecording);
+  elements.ktvPrepareButton.disabled = !canPrepareForKtv || isPreparing || isRecording;
+  elements.ktvRecordButton.disabled =
+    !canSingWithCurrentLyrics ||
+    !isPrepared ||
+    isPreparing ||
+    (!isSelectedRecording && isRecording) ||
+    hasDraftForSong ||
+    state.ktvCountdown.active;
+  if (elements.ktvStopButton) {
+    elements.ktvStopButton.disabled = !isSelectedRecording || state.ktvRecording?.status === "uploading";
+  }
+  elements.ktvModelLabel.textContent = `${t("ktvModel")}: ${formatKtvModelLabel(asset)}`;
+  elements.ktvConfidenceLabel.textContent = `${t("ktvConfidence")}: ${formatKtvConfidence(latestSession)}`;
+  elements.ktvStageProgressLabel.textContent = `${formatTime(state.currentSongId === song.id ? state.currentTime : 0)} / ${formatTime(
+    state.duration || state.durationCache[song.id] || 0,
+  )}`;
+  renderKtvPitchMonitor();
+  renderKtvPitchGuide(song, asset);
+  renderKtvCountdown();
+  if (state.ktvOpen) {
+    renderKtvStageLyrics(song, elements.ktvLyrics);
+  } else {
+    renderLyricsBlock(song, elements.ktvLyrics, { immersive: true });
+  }
+  renderKtvRecordingPreview(song);
+  renderKtvStemLinks(asset);
+  renderKtvScore(latestSession);
+}
+
+function renderKtvLyricModeControls(song, canUseDefaultLyrics, canUseExtractLyrics) {
+  const mode = getKtvLyricMode(song);
+  const buttons = [
+    { element: elements.ktvLyricModeDefaultButton, mode: "default", label: t("ktvUseDefaultLyrics"), enabled: Boolean(song && canUseDefaultLyrics) },
+    { element: elements.ktvLyricModeExtractButton, mode: "extract", label: t("ktvUseExtractLyrics"), enabled: Boolean(song && canUseExtractLyrics) },
   ];
 
-  elements.playlistSelect.innerHTML = options.join("");
-  elements.playlistSelect.value = selectedPlaylistValue;
+  for (const button of buttons) {
+    if (!button.element) {
+      continue;
+    }
+
+    button.element.textContent = button.label;
+    button.element.disabled = !button.enabled;
+    button.element.classList.toggle("is-active", mode === button.mode);
+    button.element.setAttribute("aria-pressed", String(mode === button.mode));
+  }
+}
+
+function renderKtvTaskStatus(song, asset, context = {}) {
+  if (!elements.ktvTaskStatus) {
+    return;
+  }
+
+  if (!state.ktvOpen || !song) {
+    elements.ktvTaskStatus.hidden = true;
+    return;
+  }
+
+  const status = buildKtvTaskStatus(song, asset, context);
+  if (status.state === "ready") {
+    elements.ktvTaskStatus.hidden = true;
+    elements.ktvPrepareButton.title = status.prepareTitle || "";
+    elements.ktvRecordButton.title = status.recordTitle || "";
+    return;
+  }
+
+  elements.ktvTaskStatus.hidden = false;
+  elements.ktvTaskStatus.dataset.state = status.state;
+  elements.ktvTaskStatus.setAttribute("aria-busy", String(status.busy));
+  elements.ktvTaskTitle.textContent = status.title;
+  elements.ktvTaskDetail.textContent = status.detail;
+  elements.ktvTaskProgressFill.style.width = `${status.progress}%`;
+  elements.ktvPrepareButton.title = status.prepareTitle || "";
+  elements.ktvRecordButton.title = status.recordTitle || "";
+}
+
+function buildKtvTaskStatus(song, asset, context = {}) {
+  const localTask = state.ktvUiTask?.songId === song.id ? state.ktvUiTask : null;
+  const lyricMode = context.lyricMode || getKtvLyricMode(song);
+  const isExtractMode = context.isExtractMode ?? lyricMode === "extract";
+  const isPrepared = context.isPrepared ?? (asset?.status === "complete" && Boolean(asset.accompanimentUrl));
+  const canPrepareForKtv = context.canPrepareForKtv ?? Boolean(isExtractMode ? canAutoExtractKtvLyrics() : song.ktvReadiness?.ready);
+  const guideState = state.ktvPitchGuidesBySongId[song.id];
+
+  if (localTask?.status === "requesting") {
+    return {
+      state: "busy",
+      busy: true,
+      progress: 8,
+      title: t("ktvTaskSubmitting"),
+      detail: t("ktvTaskSubmittingDetail"),
+    };
+  }
+
+  if (localTask?.status === "failed") {
+    return {
+      state: "failed",
+      busy: false,
+      progress: 100,
+      title: t("ktvTaskFailed"),
+      detail: localTask.message || t("ktvPrepareFailed"),
+    };
+  }
+
+  if (asset?.status === "running") {
+    const stage = String(asset.modelReport?.stage || "queued");
+    const usingExtractedLyrics = asset.modelReport?.lyrics?.mode === "extract" || isExtractMode;
+    const stageMap = {
+      queued: [12, t("ktvTaskQueued"), t("ktvTaskQueuedDetail")],
+      separating: [30, t("ktvTaskSeparating"), t("ktvTaskSeparatingDetail")],
+      aligning: [
+        58,
+        usingExtractedLyrics ? t("ktvTaskExtracting") : t("ktvTaskAligning"),
+        usingExtractedLyrics ? t("ktvTaskExtractingDetail") : t("ktvTaskAligningDetail"),
+      ],
+      extracting: [58, t("ktvTaskExtracting"), t("ktvTaskExtractingDetail")],
+      pitch: [82, t("ktvTaskPitch"), t("ktvTaskPitchDetail")],
+      finalizing: [94, t("ktvTaskFinalizing"), t("ktvTaskFinalizingDetail")],
+    };
+    const [progress, title, detail] = stageMap[stage] || stageMap.queued;
+    return { state: "busy", busy: true, progress, title, detail };
+  }
+
+  if (asset?.status === "failed") {
+    return {
+      state: "failed",
+      busy: false,
+      progress: 100,
+      title: t("ktvTaskFailed"),
+      detail: asset.errorMessage || t("ktvPrepareFailed"),
+    };
+  }
+
+  if (isPrepared && guideState?.status === "loading") {
+    return {
+      state: "busy",
+      busy: true,
+      progress: 96,
+      title: t("ktvTaskLoadingGuide"),
+      detail: t("ktvTaskLoadingGuideDetail"),
+    };
+  }
+
+  if (isPrepared && (song.ktvReadiness?.ready || (isExtractMode && asset?.alignmentUrl))) {
+    return {
+      state: "ready",
+      busy: false,
+      progress: 100,
+      title: t("ktvTaskReady"),
+      detail: t("ktvTaskReadyDetail"),
+    };
+  }
+
+  if (!canPrepareForKtv) {
+    return {
+      state: "blocked",
+      busy: false,
+      progress: 0,
+      title: isExtractMode ? t("ktvTaskNeedExtract") : t("ktvTaskNeedPrepare"),
+      detail: isExtractMode ? t("ktvAutoExtractUnavailable") : t("ktvDefaultLyricsMissing"),
+    };
+  }
+
+  return {
+    state: "idle",
+    busy: false,
+    progress: 0,
+    title: isExtractMode ? t("ktvTaskNeedExtract") : t("ktvTaskNeedPrepare"),
+    detail: isExtractMode ? t("ktvTaskNeedExtractDetail") : t("ktvTaskNeedPrepareDetail"),
+  };
+}
+
+function renderKtvStageScore(session) {
+  const score = normalizeClientScore(session?.score?.total);
+  elements.ktvStageScore.textContent = String(score);
+  elements.ktvStageScoreFill.style.width = `${score}%`;
+  elements.ktvStageScoreFill.classList.toggle("is-active", score > 0);
+}
+
+function renderKtvCountdown() {
+  elements.ktvCountdown.hidden = !state.ktvCountdown.active;
+  elements.ktvCountdown.dataset.step = String(state.ktvCountdown.step || 0);
+}
+
+function renderKtvPitchMonitor() {
+  const pitch = state.ktvPitch;
+  const cents = Number.isFinite(pitch.cents) ? pitch.cents : 0;
+  const markerPercent = Math.max(0, Math.min(100, 50 + cents / 2));
+  const level = normalizeClientScore(pitch.level);
+
+  elements.ktvNoteLabel.textContent = pitch.note
+    ? `${pitch.note} / ${pitch.status || t("ktvInTune")}`
+    : t("ktvNoPitch");
+  elements.ktvPitchMarker.style.left = `${markerPercent}%`;
+  elements.ktvPitchMarker.classList.toggle("is-active", Boolean(pitch.note));
+  elements.ktvPitchMarker.classList.toggle("is-sharp", cents > 18);
+  elements.ktvPitchMarker.classList.toggle("is-flat", cents < -18);
+  elements.ktvLevelMeter.value = String(level);
+  elements.ktvLevelValue.textContent = String(level);
+}
+
+function renderKtvPitchGuide(song, asset) {
+  const guideState = song ? state.ktvPitchGuidesBySongId[song.id] : null;
+  const guide = guideState?.data;
+  const currentTime = song && state.currentSongId === song.id ? state.currentTime || 0 : 0;
+  const guidePoints = Array.isArray(guide?.points) ? guide.points : [];
+  const livePoints = state.ktvPitchHistory.filter((point) => point.songId === song?.id);
+
+  if (!song || !asset?.referencePitchUrl) {
+    clearKtvPitchVisuals(t("ktvPitchGuideMissing"));
+    return;
+  }
+
+  if (guideState?.status === "loading") {
+    clearKtvPitchVisuals(t("ktvPitchGuideLoading"));
+    return;
+  }
+
+  if (!guidePoints.length) {
+    clearKtvPitchVisuals(t("ktvPitchGuideEmpty"));
+    return;
+  }
+
+  const windowSeconds = state.ktvOpen ? 18 : 12;
+  const firstGuideTime = Number(guidePoints.find((point) => Number.isFinite(Number(point.time)))?.time) || 0;
+  const leadTime = state.ktvOpen ? 5.5 : 3;
+  const windowStart =
+    state.ktvOpen && currentTime < firstGuideTime - leadTime
+      ? Math.max(0, firstGuideTime - leadTime)
+      : Math.max(0, currentTime - leadTime);
+  const windowEnd = windowStart + windowSeconds;
+  const visibleReference = guidePoints.filter(
+    (point) => point.time >= windowStart - 0.6 && point.time <= windowEnd + 0.6,
+  );
+  const visibleLive = livePoints.filter(
+    (point) => point.time >= windowStart - 0.6 && point.time <= windowEnd + 0.6,
+  );
+
+  const midiValues = [...visibleReference, ...visibleLive]
+    .map((point) => Number(point.midi))
+    .filter(Number.isFinite);
+  const minMidi = Math.floor(Math.min(...midiValues, 48) - 2);
+  const maxMidi = Math.ceil(Math.max(...midiValues, 72) + 2);
+  const scale = {
+    windowStart,
+    windowEnd,
+    minMidi,
+    maxMidi: Math.max(maxMidi, minMidi + 6),
+    width: 1000,
+    height: 260,
+  };
+
+  elements.ktvPitchGuideEmpty.hidden = true;
+  elements.ktvReferencePitchPath.setAttribute("d", buildPitchSvgPath(visibleReference, scale));
+  elements.ktvLivePitchPath.setAttribute("d", buildPitchSvgPath(visibleLive, scale));
+  renderPitchBarElements(elements.ktvReferencePitchBars, visibleReference, scale, currentTime, {
+    kind: "reference",
+  });
+  renderPitchBarElements(elements.ktvLivePitchBars, visibleLive, scale, currentTime, {
+    kind: "live",
+  });
+  renderPitchHtmlBars(elements.ktvReferencePitchLayer, visibleReference, scale, currentTime, {
+    kind: "reference",
+  });
+  renderPitchHtmlBars(elements.ktvLivePitchLayer, visibleLive, scale, currentTime, {
+    kind: "live",
+  });
+  renderKtvNoteParticleElements(elements.ktvNoteParticles, visibleReference, scale, currentTime);
+
+  const playheadX = scaleTimeToPitchX(currentTime, scale);
+  const referenceAtPlayhead = getNearestPitchPoint(visibleReference, currentTime);
+  const playheadY = referenceAtPlayhead ? scaleMidiToPitchY(referenceAtPlayhead.midi, scale) : scale.height / 2;
+  elements.ktvPitchActiveWindow.setAttribute("width", String(Math.max(0, playheadX)));
+  elements.ktvPitchPlayheadGlow.setAttribute("cx", String(playheadX));
+  elements.ktvPitchPlayheadGlow.setAttribute("cy", String(playheadY));
+  elements.ktvPitchPlayhead.setAttribute("x1", String(playheadX));
+  elements.ktvPitchPlayhead.setAttribute("x2", String(playheadX));
+}
+
+function renderKtvRecordingPreview(song) {
+  const draft = song && state.ktvDraftRecording?.songId === song.id ? state.ktvDraftRecording : null;
+  elements.ktvPreviewPanel.hidden = !draft;
+
+  if (!draft) {
+    elements.ktvPreviewAudio.removeAttribute("src");
+    elements.ktvSaveNameInput.value = "";
+    elements.ktvSaveRecordingButton.disabled = true;
+    elements.ktvDiscardRecordingButton.disabled = true;
+    return;
+  }
+
+  if (elements.ktvPreviewAudio.src !== draft.url) {
+    elements.ktvPreviewAudio.src = draft.url;
+  }
+
+  elements.ktvPreviewStatus.textContent = draft.status === "saving" ? t("ktvUploadScoring") : t("ktvUnsaved");
+  elements.ktvSaveNameInput.value = draft.name;
+  elements.ktvSaveRecordingButton.disabled = draft.status === "saving";
+  elements.ktvDiscardRecordingButton.disabled = draft.status === "saving";
+}
+
+function renderKtvStemLinks(asset) {
+  if (!asset || asset.status !== "complete") {
+    const label =
+      asset?.status === "failed"
+        ? `${t("ktvPrepareFailed")}: ${asset.errorMessage || ""}`
+        : asset?.status === "running"
+          ? t("ktvPreparing")
+          : t("ktvNoResult");
+    elements.ktvStemLinks.innerHTML = `<p class="ktv-empty">${escapeHtml(label)}</p>`;
+    return;
+  }
+
+  const links = [
+    { label: t("ktvVocals"), url: asset.vocalsUrl },
+    { label: t("ktvAccompaniment"), url: asset.accompanimentUrl },
+    { label: t("ktvBackground"), url: asset.backgroundUrl },
+  ].filter((entry) => entry.url);
+
+  elements.ktvStemLinks.innerHTML = links
+    .map(
+      (entry) => `
+        <a class="ktv-stem-link" href="${escapeHtml(entry.url)}" target="_blank" rel="noreferrer">
+          ${escapeHtml(entry.label)}
+        </a>
+      `,
+    )
+    .join("");
+}
+
+function renderKtvScore(session) {
+  if (!session) {
+    elements.ktvScoreBody.innerHTML = `<p class="ktv-empty">${escapeHtml(t("ktvNoResult"))}</p>`;
+    return;
+  }
+
+  if (session.status === "failed") {
+    elements.ktvScoreBody.innerHTML = `<p class="ktv-empty">${escapeHtml(session.errorMessage || t("ktvRecordingFailed"))}</p>`;
+    return;
+  }
+
+  if (session.status !== "complete") {
+    elements.ktvScoreBody.innerHTML = `<p class="ktv-empty">${escapeHtml(t("ktvUploadScoring"))}</p>`;
+    return;
+  }
+
+  const score = session.score || {};
+  const overall = Number.isFinite(Number(session.overallScore)) ? Number(session.overallScore) : score.overall || 0;
+  const components = score.components || {};
+  const breakdown = [
+    [t("ktvTiming"), components.timing],
+    [t("ktvEnergy"), components.energy],
+    [t("ktvPitch"), components.pitch],
+    [t("ktvLyricsScore"), components.lyrics],
+  ];
+
+  elements.ktvScoreBody.innerHTML = `
+    <div class="ktv-score-hero" style="--score:${escapeHtml(String(overall))}">
+      <span>${escapeHtml(t("ktvScore"))}</span>
+      <strong>${escapeHtml(String(Math.round(overall)))}</strong>
+    </div>
+    <div class="ktv-breakdown">
+      ${breakdown
+        .map(
+          ([label, value]) => `
+            <div class="ktv-breakdown-row">
+              <span>${escapeHtml(label)}</span>
+              <meter min="0" max="100" value="${escapeHtml(String(normalizeClientScore(value)))}"></meter>
+              <strong>${escapeHtml(String(normalizeClientScore(value)))}</strong>
+            </div>
+          `,
+        )
+        .join("")}
+    </div>
+    <p class="ktv-score-model">${escapeHtml(`${t("ktvModel")}: ${score.model || "-"}`)}</p>
+  `;
+}
+
+function buildKtvStatusLine(song, asset, latestSession) {
+  const readiness = song.ktvReadiness;
+  const lyricMode = getKtvLyricMode(song);
+  if (!readiness?.ready) {
+    if (asset?.status === "running") {
+      return t("ktvPreparing");
+    }
+
+    if (asset?.status === "failed") {
+      return `${t("ktvPrepareFailed")}: ${asset.errorMessage || ""}`;
+    }
+
+    if (lyricMode === "extract") {
+      return canAutoExtractKtvLyrics() ? t("ktvAutoLyricsReady") : t("ktvAutoExtractUnavailable");
+    }
+
+    return t("ktvDefaultLyricsMissing");
+  }
+
+  if (state.ktvRecording?.songId === song.id) {
+    return state.ktvRecording.status === "uploading" ? t("ktvUploadScoring") : t("ktvRecording");
+  }
+
+  if (state.ktvDraftRecording?.songId === song.id) {
+    return t("ktvRecordingReady");
+  }
+
+  if (asset?.status === "running") {
+    return t("ktvPreparing");
+  }
+
+  if (asset?.status === "failed") {
+    return `${t("ktvPrepareFailed")}: ${asset.errorMessage || ""}`;
+  }
+
+  if (asset?.status === "complete" && !asset.referencePitchUrl) {
+    return t("ktvPitchGuideMissing");
+  }
+
+  if (latestSession?.status === "complete") {
+    return `${t("ktvLatestResult")}: ${Math.round(latestSession.overallScore || 0)}`;
+  }
+
+  return asset?.status === "complete" ? t("ktvPrepared") : t("ktvPrepareFirst");
 }
 
 function renderMetadataReview(surface, song) {
@@ -1925,6 +2949,190 @@ function setMediaSessionAction(action, handler) {
   }
 }
 
+async function setupOfflineSupport() {
+  state.offline.supported = window.isSecureContext && "serviceWorker" in navigator && "caches" in window;
+  const stored = loadStoredOfflineInfo();
+  state.offline.cachedCount = stored.cachedCount;
+  state.offline.cachedBytes = stored.cachedBytes;
+  state.offline.lastSavedAt = stored.lastSavedAt;
+
+  if (!state.offline.supported) {
+    renderOfflineButton();
+    return;
+  }
+
+  try {
+    await navigator.serviceWorker.register("/service-worker.js");
+    await navigator.serviceWorker.ready;
+  } catch (_error) {
+    state.offline.supported = false;
+  }
+
+  renderOfflineButton();
+}
+
+async function refreshOfflineCacheStatus() {
+  if (!state.offline.supported) {
+    renderOfflineButton();
+    return;
+  }
+
+  try {
+    const cache = await caches.open("78dlc-offline-v1");
+    const cachedState = await cache.match("/api/state");
+    if (cachedState) {
+      const payload = await cachedState.clone().json().catch(() => null);
+      const songs = Array.isArray(payload?.songs) ? payload.songs : [];
+      state.offline.cachedCount = songs.length || state.offline.cachedCount;
+      state.offline.cachedBytes =
+        songs.reduce((sum, song) => sum + (Number(song.fileSize) || 0), 0) ||
+        state.offline.cachedBytes;
+    }
+  } catch (_error) {
+    // Cache inspection is best-effort.
+  }
+
+  renderOfflineButton();
+}
+
+async function saveLibraryForOffline() {
+  if (!state.offline.supported) {
+    showToast(t("offlineUnsupported"));
+    return;
+  }
+
+  const songs = state.songs.filter((song) => song.mediaUrl);
+  if (!songs.length) {
+    showToast(t("offlineNoSongs"));
+    return;
+  }
+
+  state.offline.saving = true;
+  state.offline.progressDone = 0;
+  state.offline.progressTotal = songs.length;
+  renderOfflineButton();
+
+  const totalBytes = songs.reduce((sum, song) => sum + (Number(song.fileSize) || 0), 0);
+  const estimate = navigator.storage?.estimate
+    ? await navigator.storage.estimate().catch(() => null)
+    : null;
+  if (estimate?.quota && estimate?.usage && estimate.quota - estimate.usage < totalBytes) {
+    showToast(t("offlineStorageLow"));
+  } else {
+    showToast(`${t("offlineProgress")} 0 / ${songs.length}`);
+  }
+
+  try {
+    await navigator.serviceWorker.ready;
+    const cache = await caches.open("78dlc-offline-v1");
+    await cacheEssentialAppFiles(cache);
+
+    const stateResponse = await fetch("/api/state", { cache: "no-store" });
+    if (!stateResponse.ok) {
+      throw new Error(`State request failed (${stateResponse.status}).`);
+    }
+    await cache.put("/api/state", stateResponse.clone());
+
+    const cachedState = await stateResponse.clone().json().catch(() => null);
+    const songsToCache = Array.isArray(cachedState?.songs) ? cachedState.songs : songs;
+    const urls = buildOfflineAssetUrls(songsToCache);
+    state.offline.progressTotal = urls.length;
+    renderOfflineButton();
+
+    for (const [index, url] of urls.entries()) {
+      await cacheUrl(cache, url);
+      state.offline.progressDone = index + 1;
+      renderOfflineButton();
+      if ((index + 1) % 4 === 0 || index === urls.length - 1) {
+        showToast(`${t("offlineProgress")} ${index + 1} / ${urls.length}`);
+      }
+    }
+
+    const offlineInfo = {
+      cachedCount: songsToCache.length,
+      cachedBytes: songsToCache.reduce((sum, song) => sum + (Number(song.fileSize) || 0), 0),
+      lastSavedAt: new Date().toISOString(),
+    };
+    saveStoredOfflineInfo(offlineInfo);
+    Object.assign(state.offline, offlineInfo);
+    showToast(`${t("offlineSaved")} ${songsToCache.length} ${t("trackUnit")}`);
+  } catch (error) {
+    showToast(`${t("offlineFailed")}: ${error.message}`);
+  } finally {
+    state.offline.saving = false;
+    state.offline.progressDone = 0;
+    state.offline.progressTotal = 0;
+    renderOfflineButton();
+  }
+}
+
+async function cacheEssentialAppFiles(cache) {
+  for (const url of [
+    "/",
+    "/index.html",
+    "/styles.css",
+    "/app.js",
+    "/manifest.webmanifest",
+    "/assets/icon.svg",
+    "/assets/red-dragon-loader.gif",
+  ]) {
+    await cacheUrl(cache, url);
+  }
+}
+
+function buildOfflineAssetUrls(songs) {
+  const urls = [];
+  const seen = new Set();
+
+  for (const song of songs) {
+    for (const url of [song.coverUrl, song.mediaUrl]) {
+      if (!url || seen.has(url)) {
+        continue;
+      }
+
+      seen.add(url);
+      urls.push(url);
+    }
+  }
+
+  return urls;
+}
+
+async function cacheUrl(cache, url) {
+  const request = new Request(url, { cache: "no-store" });
+  const response = await fetch(request);
+  if (!response.ok) {
+    throw new Error(`${url} (${response.status})`);
+  }
+
+  await cache.delete(url);
+  await cache.put(url, response.clone());
+}
+
+function renderOfflineButton() {
+  if (!elements.offlineSaveButton || !elements.offlineSaveButtonLabel) {
+    return;
+  }
+
+  elements.offlineSaveButton.disabled = state.offline.saving || !state.offline.supported;
+  elements.offlineSaveButton.classList.toggle("is-ready", !state.offline.saving && state.offline.cachedCount > 0);
+  elements.offlineSaveButton.title = state.offline.supported
+    ? state.offline.cachedCount > 0
+      ? `${t("offlineReady")} · ${state.offline.cachedCount} ${t("trackUnit")}`
+      : t("offlineSave")
+    : t("offlineUnsupported");
+
+  if (state.offline.saving) {
+    const done = state.offline.progressDone;
+    const total = state.offline.progressTotal;
+    elements.offlineSaveButtonLabel.textContent = total ? `${done}/${total}` : t("offlineSaving");
+    return;
+  }
+
+  elements.offlineSaveButtonLabel.textContent =
+    state.offline.cachedCount > 0 ? t("offlineReady") : t("offlineSave");
+}
+
 function updateMediaSession() {
   if (!("mediaSession" in navigator)) {
     return;
@@ -1996,7 +3204,8 @@ async function playSong(songId, { syncShuffle = true } = {}) {
     return;
   }
 
-  const isNewSong = state.currentSongId !== songId;
+  const targetUrl = song.mediaUrl;
+  const isNewSong = state.currentSongId !== songId || elements.mediaElement.getAttribute("src") !== targetUrl;
   state.selectedSongId = songId;
 
   if (state.playbackMode === "shuffle" && syncShuffle) {
@@ -2007,7 +3216,7 @@ async function playSong(songId, { syncShuffle = true } = {}) {
     state.currentSongId = songId;
     state.currentTime = 0;
     state.duration = state.durationCache[songId] || 0;
-    elements.mediaElement.src = song.mediaUrl;
+    elements.mediaElement.src = targetUrl;
     elements.mediaElement.load();
   }
 
@@ -2021,11 +3230,19 @@ async function playSong(songId, { syncShuffle = true } = {}) {
     renderImmersive();
 
     if (isNewSong) {
-      const nextState = await fetchJson(`/api/songs/${songId}/play`, { method: "POST" });
-      applyState(nextState);
+      recordSongPlay(songId);
     }
   } catch (error) {
     showToast(`${t("playbackFailed")}: ${error.message}`);
+  }
+}
+
+async function recordSongPlay(songId) {
+  try {
+    const nextState = await fetchJson(`/api/songs/${songId}/play`, { method: "POST" });
+    applyState(nextState);
+  } catch (_error) {
+    // Offline playback should not fail just because play history cannot be written.
   }
 }
 
@@ -2221,6 +3438,9 @@ function updatePlaybackMetrics() {
   if (state.immersiveOpen) {
     renderImmersive();
   }
+  if (state.ktvOpen || state.ktvRecording) {
+    renderKtvPanel();
+  }
 }
 
 function setActiveView(nextView) {
@@ -2316,6 +3536,7 @@ function openEditorPanel({ focusLyrics = false } = {}) {
   elements.tabSongs.classList.remove("active");
   elements.tabEditor.classList.toggle("active", !focusLyrics);
   elements.tabLyrics.classList.toggle("active", focusLyrics);
+  elements.tabKtv?.classList.remove("active");
 
   queueMicrotask(() => {
     if (focusLyrics) {
@@ -2336,6 +3557,7 @@ function closeEditorPanel({ shouldRender = true } = {}) {
   elements.tabSongs.classList.add("active");
   elements.tabEditor.classList.remove("active");
   elements.tabLyrics.classList.remove("active");
+  elements.tabKtv?.classList.remove("active");
 
   if (shouldRender) {
     renderEditorPanel();
@@ -2347,6 +3569,7 @@ function focusSongTable() {
   elements.tabSongs.classList.add("active");
   elements.tabEditor.classList.remove("active");
   elements.tabLyrics.classList.remove("active");
+  elements.tabKtv?.classList.remove("active");
   renderEditorPanel();
   elements.songTableBody.closest(".song-panel").scrollIntoView({ behavior: "smooth", block: "start" });
 }
@@ -2357,6 +3580,517 @@ function focusEditorPanel() {
 
 function focusLyricsPanel() {
   openEditorPanel({ focusLyrics: true });
+}
+
+function focusKtvPanel() {
+  closeEditorPanel({ shouldRender: false });
+  elements.tabSongs.classList.remove("active");
+  elements.tabEditor.classList.remove("active");
+  elements.tabLyrics.classList.remove("active");
+  elements.tabKtv?.classList.add("active");
+  state.ktvOpen = true;
+  renderEditorPanel();
+  renderKtvPanel();
+}
+
+function closeKtvStage() {
+  state.ktvOpen = false;
+  renderKtvPanel();
+}
+
+async function prepareSelectedKtvSong() {
+  const song = getSelectedSong();
+  if (!song) {
+    showToast(t("chooseSongFirst"));
+    return;
+  }
+
+  const lyricMode = getKtvLyricMode(song);
+  if (lyricMode === "default" && !song.ktvReadiness?.ready) {
+    showToast(t("ktvDefaultLyricsMissing"));
+    return;
+  }
+
+  if (lyricMode === "extract" && !canAutoExtractKtvLyrics()) {
+    showToast(t("ktvAutoExtractUnavailable"));
+    return;
+  }
+
+  state.ktvUiTask = { songId: song.id, status: "requesting", lyricMode };
+  elements.ktvPrepareButton.disabled = true;
+  renderKtvPanel();
+
+  try {
+    const nextState = await fetchJson(`/api/ktv/songs/${song.id}/prepare`, {
+      method: "POST",
+      body: JSON.stringify({ lyricMode }),
+    });
+    state.ktvUiTask = null;
+    applyState(nextState);
+    scheduleKtvPolling();
+    showToast(lyricMode === "extract" ? t("ktvAutoPreparingToast") : t("ktvPreparingToast"));
+  } catch (error) {
+    state.ktvUiTask = { songId: song.id, status: "failed", lyricMode, message: error.message };
+    showToast(error.message);
+  } finally {
+    renderKtvPanel();
+  }
+}
+
+async function startSelectedKtvRecording() {
+  const song = getSelectedSong();
+  if (!song) {
+    showToast(t("chooseSongFirst"));
+    return;
+  }
+
+  const lyricMode = getKtvLyricMode(song);
+  const asset = getKtvAsset(song);
+  const canUseSelectedLyrics = lyricMode === "extract" ? Boolean(asset?.alignmentUrl) : Boolean(song.ktvReadiness?.ready);
+  if (!canUseSelectedLyrics) {
+    showToast(lyricMode === "extract" ? t("ktvAutoExtractFirst") : t("ktvDefaultLyricsMissing"));
+    return;
+  }
+
+  if (asset?.status !== "complete" || !asset.accompanimentUrl) {
+    showToast(t("ktvPrepareFirst"));
+    return;
+  }
+
+  if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === "undefined") {
+    showToast(t("ktvMicUnavailable"));
+    return;
+  }
+
+  try {
+    state.ktvOpen = true;
+    state.ktvPitchHistory = [];
+    const payload = await fetchJson("/api/ktv/sessions", {
+      method: "POST",
+      body: JSON.stringify({ songId: song.id, lyricMode }),
+    });
+    applyState(payload.state);
+
+    const stream = await navigator.mediaDevices.getUserMedia({
+      audio: {
+        echoCancellation: false,
+        noiseSuppression: false,
+        autoGainControl: false,
+      },
+    });
+    const mimeType = chooseRecordingMimeType();
+    const recorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
+    const chunks = [];
+
+    recorder.addEventListener("dataavailable", (event) => {
+      if (event.data?.size) {
+        chunks.push(event.data);
+      }
+    });
+
+    const countdownCompleted = await runKtvStartCountdown(song.id);
+    if (!countdownCompleted) {
+      for (const track of stream.getTracks()) {
+        track.stop();
+      }
+      return;
+    }
+
+    recorder.addEventListener(
+      "stop",
+      () => {
+        finalizeKtvRecordingPreview(payload.session.id, song, chunks, stream, recorder.mimeType || mimeType);
+      },
+      { once: true },
+    );
+
+    const pitchMonitor = await startKtvPitchMonitor(stream);
+    state.ktvRecording = {
+      sessionId: payload.session.id,
+      songId: song.id,
+      recorder,
+      stream,
+      chunks,
+      pitchMonitor,
+      status: "recording",
+    };
+
+    recorder.start(1000);
+    await playKtvBackingTrack(song);
+    renderKtvPanel();
+  } catch (error) {
+    state.ktvCountdown = { active: false, step: 0 };
+    cleanupKtvRecording();
+    showToast(`${t("ktvRecordingFailed")}: ${error.message}`);
+    renderKtvPanel();
+  }
+}
+
+async function runKtvStartCountdown(songId) {
+  state.ktvCountdown = { active: true, step: 3 };
+  renderKtvPanel();
+
+  for (let step = 3; step >= 1; step -= 1) {
+    state.ktvCountdown = { active: true, step };
+    renderKtvPanel();
+    await wait(620);
+    if (state.selectedSongId !== songId) {
+      state.ktvCountdown = { active: false, step: 0 };
+      renderKtvPanel();
+      return false;
+    }
+  }
+
+  state.ktvCountdown = { active: false, step: 0 };
+  renderKtvPanel();
+  return true;
+}
+
+function wait(milliseconds) {
+  return new Promise((resolve) => {
+    window.setTimeout(resolve, milliseconds);
+  });
+}
+
+function stopKtvRecording() {
+  if (!state.ktvRecording?.recorder) {
+    return;
+  }
+
+  state.ktvRecording.status = "previewing";
+  pausePlayback();
+  stopKtvPitchMonitor();
+  renderKtvPanel();
+
+  if (state.ktvRecording.recorder.state !== "inactive") {
+    state.ktvRecording.recorder.stop();
+  }
+}
+
+function finalizeKtvRecordingPreview(sessionId, song, chunks, stream, mimeType) {
+  try {
+    const chunkType = chunks.find((chunk) => chunk?.type)?.type || "";
+    const resolvedMimeType = chunkType || mimeType || "application/octet-stream";
+    const blob = new Blob(chunks, { type: resolvedMimeType });
+    if (!blob.size) {
+      throw new Error("Recording is empty.");
+    }
+
+    discardDraftKtvRecording({ silent: true });
+    const url = URL.createObjectURL(blob);
+    const suggestedName = buildKtvRecordingName(song);
+    state.ktvDraftRecording = {
+      sessionId,
+      songId: song.id,
+      blob,
+      url,
+      mimeType: blob.type || resolvedMimeType,
+      name: suggestedName,
+      suggestedName,
+      status: "preview",
+    };
+    showToast(t("ktvRecordingReady"));
+  } catch (error) {
+    showToast(`${t("ktvRecordingFailed")}: ${error.message}`);
+  } finally {
+    for (const track of stream.getTracks()) {
+      track.stop();
+    }
+    state.ktvRecording = null;
+    stopKtvPitchMonitor();
+    renderKtvPanel();
+  }
+}
+
+async function saveDraftKtvRecording() {
+  const draft = state.ktvDraftRecording;
+  if (!draft?.blob) {
+    return;
+  }
+
+  draft.status = "saving";
+  renderKtvPanel();
+
+  try {
+    const name = elements.ktvSaveNameInput.value.trim() || draft.suggestedName;
+    const params = new URLSearchParams({ name });
+    const response = await fetch(`/api/ktv/sessions/${draft.sessionId}/recording?${params}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": draft.mimeType || "application/octet-stream",
+      },
+      body: draft.blob,
+    });
+    const payload = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(payload.error || "Request failed.");
+    }
+
+    applyState(payload.state);
+    discardDraftKtvRecording({ silent: true });
+    showToast(t("ktvScoredToast"));
+  } catch (error) {
+    showToast(`${t("ktvRecordingFailed")}: ${error.message}`);
+  } finally {
+    if (state.ktvDraftRecording) {
+      state.ktvDraftRecording.status = "preview";
+    }
+    renderKtvPanel();
+  }
+}
+
+function discardDraftKtvRecording({ silent = false } = {}) {
+  if (!state.ktvDraftRecording) {
+    return;
+  }
+
+  URL.revokeObjectURL(state.ktvDraftRecording.url);
+  state.ktvDraftRecording = null;
+  elements.ktvPreviewAudio.pause();
+  elements.ktvPreviewAudio.removeAttribute("src");
+
+  if (!silent) {
+    showToast(t("ktvRecordingDiscarded"));
+  }
+
+  renderKtvPanel();
+}
+
+async function playKtvBackingTrack(song) {
+  const asset = getKtvAsset(song);
+  const targetUrl = asset?.status === "complete" && asset.accompanimentUrl ? asset.accompanimentUrl : song.mediaUrl;
+  state.currentSongId = song.id;
+  state.selectedSongId = song.id;
+  state.currentTime = 0;
+  state.duration = state.durationCache[song.id] || 0;
+  elements.mediaElement.src = targetUrl;
+  elements.mediaElement.load();
+  await elements.mediaElement.play();
+  state.isPlaying = true;
+  renderHeader();
+  renderSongPanel();
+  renderPlayer();
+  renderImmersive();
+  renderKtvPanel();
+}
+
+function cleanupKtvRecording() {
+  if (!state.ktvRecording) {
+    return;
+  }
+
+  stopKtvPitchMonitor();
+  for (const track of state.ktvRecording.stream?.getTracks?.() || []) {
+    track.stop();
+  }
+
+  state.ktvRecording = null;
+}
+
+async function startKtvPitchMonitor(stream) {
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) {
+    return null;
+  }
+
+  const audioContext = new AudioContextClass();
+  await audioContext.resume();
+  const analyser = audioContext.createAnalyser();
+  analyser.fftSize = 2048;
+  analyser.smoothingTimeConstant = 0.08;
+  const source = audioContext.createMediaStreamSource(stream);
+  source.connect(analyser);
+  const buffer = new Float32Array(analyser.fftSize);
+  const monitor = {
+    active: true,
+    audioContext,
+    analyser,
+    source,
+    buffer,
+    frameId: null,
+  };
+
+  state.ktvPitch = {
+    active: true,
+    level: 0,
+    frequency: 0,
+    referenceFrequency: 0,
+    note: "",
+    cents: 0,
+    status: t("ktvNoPitch"),
+  };
+
+  const update = () => {
+    if (!monitor.active) {
+      return;
+    }
+
+    analyser.getFloatTimeDomainData(buffer);
+    const level = computeRmsLevel(buffer);
+    const frequency = detectPitch(buffer, audioContext.sampleRate);
+    const currentSong = getSongById(state.ktvRecording?.songId);
+    const currentTime = currentSong && state.currentSongId === currentSong.id ? state.currentTime || 0 : 0;
+    const reference = currentSong ? getReferencePitchAtTime(currentSong.id, currentTime) : null;
+    const pitchInfo = frequency ? describePitch(frequency) : null;
+    const cents =
+      frequency && reference?.frequency
+        ? Math.round(1200 * Math.log2(frequency / reference.frequency))
+        : pitchInfo?.cents || 0;
+
+    if (frequency && currentSong) {
+      state.ktvPitchHistory.push({
+        songId: currentSong.id,
+        time: Number(currentTime.toFixed(2)),
+        frequency,
+        midi: frequencyToMidi(frequency),
+      });
+      if (state.ktvPitchHistory.length > 900) {
+        state.ktvPitchHistory.splice(0, state.ktvPitchHistory.length - 900);
+      }
+    }
+
+    state.ktvPitch = {
+      active: true,
+      level,
+      frequency: frequency || 0,
+      referenceFrequency: reference?.frequency || 0,
+      note: pitchInfo?.note || "",
+      cents,
+      status: frequency ? getPitchStatusLabel(cents) : t("ktvNoPitch"),
+    };
+    renderKtvPitchMonitor();
+    renderKtvPitchGuide(currentSong, getKtvAsset(currentSong));
+    monitor.frameId = window.requestAnimationFrame(update);
+  };
+
+  update();
+  return monitor;
+}
+
+function stopKtvPitchMonitor() {
+  const monitor = state.ktvRecording?.pitchMonitor;
+  if (monitor) {
+    monitor.active = false;
+    if (monitor.frameId) {
+      window.cancelAnimationFrame(monitor.frameId);
+    }
+    monitor.source?.disconnect?.();
+    monitor.audioContext?.close?.();
+  }
+
+  state.ktvPitch = {
+    active: false,
+    level: 0,
+    frequency: 0,
+    referenceFrequency: 0,
+    note: "",
+    cents: 0,
+    status: t("ktvNoPitch"),
+  };
+  renderKtvPitchMonitor();
+}
+
+function computeRmsLevel(buffer) {
+  let sum = 0;
+  for (const sample of buffer) {
+    sum += sample * sample;
+  }
+
+  return Math.round(Math.min(100, Math.sqrt(sum / buffer.length) * 220));
+}
+
+function detectPitch(buffer, sampleRate) {
+  const rms = Math.sqrt(buffer.reduce((sum, sample) => sum + sample * sample, 0) / buffer.length);
+  if (rms < 0.012) {
+    return 0;
+  }
+
+  const minLag = Math.floor(sampleRate / 1000);
+  const maxLag = Math.floor(sampleRate / 65);
+  let bestLag = -1;
+  let bestCorrelation = 0;
+
+  for (let lag = minLag; lag <= maxLag; lag += 1) {
+    let correlation = 0;
+    for (let index = 0; index < buffer.length - lag; index += 1) {
+      correlation += buffer[index] * buffer[index + lag];
+    }
+    correlation /= buffer.length - lag;
+
+    if (correlation > bestCorrelation) {
+      bestCorrelation = correlation;
+      bestLag = lag;
+    }
+  }
+
+  if (bestLag <= 0 || bestCorrelation < 0.002) {
+    return 0;
+  }
+
+  return sampleRate / bestLag;
+}
+
+function describePitch(frequency) {
+  const noteNumber = Math.round(frequencyToMidi(frequency));
+  const targetFrequency = 440 * 2 ** ((noteNumber - 69) / 12);
+  const cents = Math.round(1200 * Math.log2(frequency / targetFrequency));
+  const noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+  const octave = Math.floor(noteNumber / 12) - 1;
+  return {
+    note: `${noteNames[((noteNumber % 12) + 12) % 12]}${octave}`,
+    cents,
+  };
+}
+
+function frequencyToMidi(frequency) {
+  return 12 * Math.log2(frequency / 440) + 69;
+}
+
+function getPitchStatusLabel(cents) {
+  if (cents > 18) {
+    return t("ktvSharp");
+  }
+
+  if (cents < -18) {
+    return t("ktvFlat");
+  }
+
+  return t("ktvInTune");
+}
+
+function chooseRecordingMimeType() {
+  const audio = document.createElement("audio");
+  const candidates = [
+    "audio/mp4;codecs=mp4a.40.2",
+    "audio/mp4",
+    "audio/webm;codecs=opus",
+    "audio/webm",
+    "audio/ogg;codecs=opus",
+    "audio/wav",
+  ];
+
+  return (
+    candidates.find((candidate) => {
+      const recorderSupports = MediaRecorder.isTypeSupported(candidate);
+      const playerSupports = audio.canPlayType(candidate.replace(";codecs=opus", "").replace(";codecs=mp4a.40.2", ""));
+      return recorderSupports && playerSupports;
+    }) || candidates.find((candidate) => MediaRecorder.isTypeSupported(candidate)) || ""
+  );
+}
+
+function scheduleKtvPolling() {
+  clearTimeout(ktvPollTimer);
+  ktvPollTimer = setTimeout(async () => {
+    await loadState();
+    if (hasRunningKtvTask()) {
+      scheduleKtvPolling();
+    }
+  }, 1800);
+}
+
+function hasRunningKtvTask() {
+  return Object.values(state.ktv.assetsBySongId || {}).some((asset) => asset.status === "running");
 }
 
 function warmDurationCache(songs) {
@@ -2452,6 +4186,105 @@ function renderLyricsBlock(song, container, { immersive }) {
   }
 
   container.dataset.activeIndex = String(activeIndex);
+}
+
+function renderKtvStageLyrics(song, container) {
+  const alignmentLines = song && getKtvLyricMode(song) === "extract" ? getKtvDisplayAlignmentLines(song) : [];
+
+  if (!song || (!song.lyrics.trim() && !alignmentLines.length)) {
+    container.innerHTML = `<p class="lyrics-empty">${escapeHtml(t("immersiveEmpty"))}</p>`;
+    container.dataset.activeIndex = "";
+    return;
+  }
+
+  const timedLines = alignmentLines.length ? alignmentLines : parseTimedLyrics(song.lyrics);
+  const lines = timedLines.length
+    ? timedLines.map((line) => line.text)
+    : getDisplayLyricLines(song.lyrics);
+
+  if (!lines.length) {
+    container.innerHTML = `<p class="lyrics-empty">${escapeHtml(t("immersiveEmpty"))}</p>`;
+    container.dataset.activeIndex = "";
+    return;
+  }
+
+  const activeIndex =
+    timedLines.length && state.currentSongId === song.id
+      ? getTimedLyricIndex(timedLines)
+      : getActiveLyricIndex(song, lines.length);
+  const startIndex = Math.max(0, activeIndex);
+  const visibleLines = lines.slice(startIndex, startIndex + 3);
+  const currentLine = visibleLines[0] || lines[activeIndex] || "";
+  const lineProgress = computeKtvLineProgress(timedLines, activeIndex, song);
+  const sungLength = Math.max(0, Math.min(currentLine.length, Math.floor(currentLine.length * lineProgress)));
+  const currentHtml = `<p class="lyrics-line ktv-stage-lyric-line is-active"><span class="ktv-lyric-sung">${escapeHtml(
+    currentLine.slice(0, sungLength),
+  )}</span><span class="ktv-lyric-pending">${escapeHtml(currentLine.slice(sungLength))}</span></p>`;
+  const futureHtml = visibleLines
+    .slice(1)
+    .map((line, index) => {
+      const className = index === 0 ? " is-next" : "";
+      return `<p class="lyrics-line ktv-stage-lyric-line${className}">${escapeHtml(line)}</p>`;
+    })
+    .join("");
+
+  container.innerHTML = `${currentHtml}${futureHtml}`;
+  container.dataset.activeIndex = String(activeIndex);
+}
+
+function getKtvDisplayAlignmentLines(song) {
+  const guide = state.ktvPitchGuidesBySongId[song.id]?.data;
+  const alignmentLines = Array.isArray(guide?.alignment?.lines) ? guide.alignment.lines : [];
+  return alignmentLines
+    .map((line) => ({
+      time: Number(line.start),
+      end: Number(line.end),
+      text: String(line.text || "").trim(),
+      source: guide.alignment?.source || "",
+      similarity: Number(line.similarity),
+    }))
+    .filter((line) => Number.isFinite(line.time) && line.text && isClientSingableLyricLine(line.text))
+    .sort((left, right) => left.time - right.time);
+}
+
+function getDisplayLyricLines(lyrics) {
+  return String(lyrics || "")
+    .split("\n")
+    .map((line) => line.replace(/\[[^\]]+\]/g, "").trim())
+    .filter((line) => line.length > 0 && isClientSingableLyricLine(line));
+}
+
+function isClientSingableLyricLine(text) {
+  const normalized = String(text || "").trim().toLowerCase();
+  if (!normalized) {
+    return false;
+  }
+
+  if (
+    /^(title|artist|album|composer|composed by|written by|lyrics by|作词|作曲|编曲|歌手|歌曲|专辑)\b|composed by/.test(
+      normalized,
+    )
+  ) {
+    return false;
+  }
+
+  return normalized.replace(/\s+/g, "").length >= 3;
+}
+
+function computeKtvLineProgress(timedLines, activeIndex, song) {
+  if (!timedLines.length || state.currentSongId !== song.id) {
+    return 0.34;
+  }
+
+  const currentLine = timedLines[activeIndex];
+  const nextLine = timedLines[activeIndex + 1];
+  if (!currentLine) {
+    return 0.34;
+  }
+
+  const startTime = Number(currentLine.time) || 0;
+  const endTime = Number(currentLine.end) || Number(nextLine?.time) || startTime + 4;
+  return Math.max(0, Math.min(1, (state.currentTime - startTime) / Math.max(0.8, endTime - startTime)));
 }
 
 function renderCoverSurface(song, fallbackLabel, imageEl, placeholderEl) {
@@ -2581,32 +4414,440 @@ function getSongById(songId) {
   return state.songs.find((song) => song.id === Number(songId)) || null;
 }
 
+function getKtvAsset(song) {
+  return song ? state.ktv.assetsBySongId?.[song.id] || null : null;
+}
+
+function getKtvLyricMode(song) {
+  if (!song) {
+    return "default";
+  }
+
+  const storedMode = state.ktvLyricModeBySongId[song.id];
+  if (storedMode === "default" || storedMode === "extract") {
+    if (storedMode === "default" && !song.ktvReadiness?.ready && canAutoExtractKtvLyrics()) {
+      return "extract";
+    }
+    if (storedMode === "extract" && !canAutoExtractKtvLyrics() && song.ktvReadiness?.ready) {
+      return "default";
+    }
+    return storedMode;
+  }
+
+  return song.ktvReadiness?.ready ? "default" : "extract";
+}
+
+function setSelectedKtvLyricMode(mode) {
+  const song = getSelectedSong();
+  if (!song || (mode !== "default" && mode !== "extract")) {
+    return;
+  }
+
+  state.ktvLyricModeBySongId[song.id] = mode;
+  state.ktvUiTask = null;
+  renderKtvPanel();
+}
+
+function canAutoExtractKtvLyrics() {
+  const config = state.ktv.config || {};
+  if (config.automaticLyricExtraction) {
+    return true;
+  }
+
+  return /whisper|asr|speech/i.test(String(config.alignment || ""));
+}
+
+function getLatestKtvSession(song) {
+  return song ? state.ktv.latestSessionsBySongId?.[song.id] || null : null;
+}
+
+function formatKtvModelLabel(asset) {
+  if (!asset) {
+    return state.ktv.config?.separator || "-";
+  }
+
+  const report = asset.modelReport || {};
+  return report.separator?.model || report.separator?.mode || asset.status || "-";
+}
+
+function formatKtvConfidence(session) {
+  return session?.score?.confidence || "-";
+}
+
+function ensureKtvPitchGuide(song, asset) {
+  if (!song || !asset?.referencePitchUrl) {
+    return;
+  }
+
+  const current = state.ktvPitchGuidesBySongId[song.id];
+  if (
+    (current?.status === "ready" || current?.status === "loading" || current?.status === "failed") &&
+    current.assetUpdatedAt === asset.updatedAt
+  ) {
+    return;
+  }
+
+  state.ktvPitchGuidesBySongId[song.id] = {
+    status: "loading",
+    data: null,
+    error: "",
+    assetUpdatedAt: asset.updatedAt,
+  };
+  fetchJson(asset.referencePitchUrl)
+    .then((guide) => {
+      state.ktvPitchGuidesBySongId[song.id] = {
+        status: "ready",
+        data: guide,
+        error: "",
+        assetUpdatedAt: asset.updatedAt,
+      };
+      renderKtvPanel();
+    })
+    .catch((error) => {
+      state.ktvPitchGuidesBySongId[song.id] = {
+        status: "failed",
+        data: null,
+        error: error.message,
+        assetUpdatedAt: asset.updatedAt,
+      };
+      renderKtvPanel();
+    });
+}
+
+function getReferencePitchAtTime(songId, time) {
+  const guide = state.ktvPitchGuidesBySongId[songId]?.data;
+  const points = Array.isArray(guide?.points) ? guide.points : [];
+  if (!points.length) {
+    return null;
+  }
+
+  let bestPoint = null;
+  let bestDistance = Infinity;
+  for (const point of points) {
+    const distance = Math.abs(Number(point.time) - time);
+    if (distance < bestDistance) {
+      bestPoint = point;
+      bestDistance = distance;
+    }
+    if (Number(point.time) > time + 0.45) {
+      break;
+    }
+  }
+
+  return bestDistance <= 0.45 ? bestPoint : null;
+}
+
+function buildPitchSvgPath(points, scale) {
+  let path = "";
+  let previousTime = null;
+
+  for (const point of points) {
+    const midi = Number(point.midi);
+    if (!Number.isFinite(midi)) {
+      continue;
+    }
+
+    const x = scaleTimeToPitchX(point.time, scale);
+    const y = scaleMidiToPitchY(midi, scale);
+    const command = previousTime === null || point.time - previousTime > 0.55 ? "M" : "L";
+    path += `${command}${x.toFixed(1)} ${y.toFixed(1)} `;
+    previousTime = point.time;
+  }
+
+  return path.trim();
+}
+
+function clearKtvPitchVisuals(message) {
+  elements.ktvReferencePitchPath.setAttribute("d", "");
+  elements.ktvLivePitchPath.setAttribute("d", "");
+  elements.ktvReferencePitchBars.replaceChildren();
+  elements.ktvLivePitchBars.replaceChildren();
+  elements.ktvNoteParticles.replaceChildren();
+  elements.ktvReferencePitchLayer.replaceChildren();
+  elements.ktvLivePitchLayer.replaceChildren();
+  elements.ktvPitchActiveWindow.setAttribute("width", "0");
+  elements.ktvPitchPlayheadGlow.setAttribute("cx", "0");
+  elements.ktvPitchPlayheadGlow.setAttribute("cy", "130");
+  elements.ktvPitchPlayhead.setAttribute("x1", "0");
+  elements.ktvPitchPlayhead.setAttribute("x2", "0");
+  elements.ktvPitchGuideEmpty.hidden = false;
+  elements.ktvPitchGuideEmpty.textContent = message;
+}
+
+function renderPitchBarElements(group, points, scale, currentTime, { kind }) {
+  const segments = groupPitchPointsIntoSegments(points);
+  const isLive = kind === "live";
+  const nodes = segments.map((segment) => {
+    const x = scaleTimeToPitchX(segment.start, scale);
+    const endX = scaleTimeToPitchX(segment.end, scale);
+    const width = Math.max(isLive ? 12 : 72, endX - x);
+    const y = scaleMidiToPitchY(segment.midi, scale);
+    const height = isLive ? 9 : 15;
+    const className = isLive
+      ? "ktv-live-note"
+      : segment.end < currentTime - 0.04
+        ? "ktv-guide-note is-sung"
+        : segment.start <= currentTime + 0.12
+          ? "ktv-guide-note is-current"
+          : "ktv-guide-note is-future";
+    const paint = isLive
+      ? { fill: "#1f724e", opacity: "0.94", stroke: "#ffffff", "stroke-opacity": "0.28", "stroke-width": "1" }
+      : segment.end < currentTime - 0.04
+        ? { fill: "#ff3155", opacity: "1", stroke: "#ffffff", "stroke-opacity": "0.86", "stroke-width": "2" }
+        : segment.start <= currentTime + 0.12
+          ? { fill: "#ff6541", opacity: "1", stroke: "#ffffff", "stroke-opacity": "0.92", "stroke-width": "2" }
+          : { fill: "#a8a8a8", opacity: "0.72", stroke: "#ffffff", "stroke-opacity": "0.16", "stroke-width": "1" };
+
+    return createSvgNode("rect", {
+      class: className,
+      x: x.toFixed(1),
+      y: (y - height / 2).toFixed(1),
+      width: width.toFixed(1),
+      height: String(height),
+      rx: String(height / 2),
+      ...paint,
+    });
+  });
+
+  group.replaceChildren(...nodes);
+}
+
+function renderPitchHtmlBars(layer, points, scale, currentTime, { kind }) {
+  const segments = groupPitchPointsIntoSegments(points);
+  const isLive = kind === "live";
+  const nodes = segments.map((segment) => {
+    const x = scaleTimeToPitchX(segment.start, scale);
+    const endX = scaleTimeToPitchX(segment.end, scale);
+    const width = Math.max(isLive ? 12 : 72, endX - x);
+    const y = scaleMidiToPitchY(segment.midi, scale);
+    const height = isLive ? 9 : 15;
+    const className = isLive
+      ? "ktv-html-note ktv-html-note-live"
+      : segment.end < currentTime - 0.04
+        ? "ktv-html-note ktv-html-note-sung"
+        : segment.start <= currentTime + 0.12
+          ? "ktv-html-note ktv-html-note-current"
+          : "ktv-html-note ktv-html-note-future";
+    const node = document.createElement("span");
+    node.className = className;
+    node.style.left = `${(x / scale.width) * 100}%`;
+    node.style.top = `${(y / scale.height) * 100}%`;
+    node.style.width = `${(width / scale.width) * 100}%`;
+    node.style.height = `${height}px`;
+    return node;
+  });
+
+  layer.replaceChildren(...nodes);
+}
+
+function groupPitchPointsIntoSegments(points) {
+  const normalized = points
+    .map((point) => ({
+      time: Number(point.time),
+      midi: Number(point.midi),
+    }))
+    .filter((point) => Number.isFinite(point.time) && Number.isFinite(point.midi))
+    .sort((a, b) => a.time - b.time);
+
+  const segments = [];
+  let current = null;
+
+  for (const point of normalized) {
+    const quantizedMidi = Math.round(point.midi * 2) / 2;
+    if (
+      current &&
+      point.time - current.lastTime <= 0.22 &&
+      Math.abs(quantizedMidi - current.midi) <= 0.75
+    ) {
+      current.end = point.time;
+      current.lastTime = point.time;
+      current.midi = current.midi * 0.7 + quantizedMidi * 0.3;
+      continue;
+    }
+
+    if (current) {
+      segments.push(current);
+    }
+
+    current = {
+      start: point.time,
+      end: point.time + 0.18,
+      lastTime: point.time,
+      midi: quantizedMidi,
+    };
+  }
+
+  if (current) {
+    segments.push(current);
+  }
+
+  return segments.map((segment) => ({
+    start: segment.start,
+    end: Math.max(segment.end, segment.start + 0.2),
+    midi: segment.midi,
+  }));
+}
+
+function renderKtvNoteParticleElements(group, referencePoints, scale, currentTime) {
+  const segments = groupPitchPointsIntoSegments(referencePoints).filter(
+    (segment) => segment.end <= currentTime + 0.35 && segment.end >= currentTime - 4.8,
+  );
+  const particles = segments.slice(-7);
+  const nodes = particles.map((segment, index) => {
+    const age = Math.max(0, currentTime - segment.end);
+    const x = scaleTimeToPitchX(segment.end, scale) - age * 18;
+    const y = scaleMidiToPitchY(segment.midi, scale) - 18 - index * 8;
+    const opacity = Math.max(0.18, 1 - age / 4.8);
+
+    if (index % 2 === 0) {
+      const node = createSvgNode("text", {
+        class: "ktv-note-particle-symbol",
+        x: x.toFixed(1),
+        y: y.toFixed(1),
+        opacity: opacity.toFixed(2),
+      });
+      node.textContent = "♪";
+      return node;
+    }
+
+    return createSvgNode("rect", {
+      class: "ktv-note-particle-diamond",
+      x: (x - 5).toFixed(1),
+      y: (y - 8).toFixed(1),
+      width: "10",
+      height: "10",
+      opacity: opacity.toFixed(2),
+      transform: `rotate(45 ${x.toFixed(1)} ${(y - 3).toFixed(1)})`,
+    });
+  });
+
+  group.replaceChildren(...nodes);
+}
+
+function createSvgNode(tagName, attributes) {
+  const node = document.createElementNS(SVG_NAMESPACE, tagName);
+  Object.entries(attributes).forEach(([name, value]) => {
+    node.setAttribute(name, value);
+  });
+  return node;
+}
+
+function getNearestPitchPoint(points, currentTime) {
+  let nearest = null;
+  let nearestDistance = Infinity;
+  for (const point of points) {
+    const time = Number(point.time);
+    const midi = Number(point.midi);
+    if (!Number.isFinite(time) || !Number.isFinite(midi)) {
+      continue;
+    }
+
+    const distance = Math.abs(time - currentTime);
+    if (distance < nearestDistance) {
+      nearest = { ...point, midi };
+      nearestDistance = distance;
+    }
+  }
+
+  return nearestDistance <= 0.8 ? nearest : null;
+}
+
+function scaleTimeToPitchX(time, scale) {
+  const ratio = (time - scale.windowStart) / Math.max(0.1, scale.windowEnd - scale.windowStart);
+  return Math.max(0, Math.min(scale.width, ratio * scale.width));
+}
+
+function scaleMidiToPitchY(midi, scale) {
+  const ratio = (midi - scale.minMidi) / Math.max(1, scale.maxMidi - scale.minMidi);
+  return Math.max(12, Math.min(scale.height - 12, scale.height - ratio * scale.height));
+}
+
+function normalizeClientScore(value) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) {
+    return 0;
+  }
+
+  return Math.min(100, Math.max(0, Math.round(number)));
+}
+
+function buildKtvRecordingName(song) {
+  const title = sanitizeRecordingName(song?.displayTitle || song?.fileStem || "song") || "song";
+  return `${title}-${formatKtvTimestamp(new Date())}-sing`;
+}
+
+function sanitizeRecordingName(value) {
+  return String(value || "")
+    .replace(/[<>:"/\\|?*\x00-\x1F]/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 160);
+}
+
+function formatKtvTimestamp(date) {
+  const pad = (value) => String(value).padStart(2, "0");
+  return `${date.getFullYear()}${pad(date.getMonth() + 1)}${pad(date.getDate())}-${pad(
+    date.getHours(),
+  )}${pad(date.getMinutes())}${pad(date.getSeconds())}`;
+}
+
 function getPlaylistById(playlistId) {
   return state.playlists.find((playlist) => playlist.id === Number(playlistId)) || null;
 }
 
-function resolvePlaylistSelection(song) {
+function getSongPlaylistMemberships(song) {
+  if (!song) {
+    return [];
+  }
+
+  const membershipsFromPlaylists = state.playlists
+    .filter((playlist) => Array.isArray(playlist.songIds) && playlist.songIds.includes(song.id))
+    .map((playlist) => ({
+      id: playlist.id,
+      name: playlist.name,
+    }));
+
+  if (membershipsFromPlaylists.length) {
+    return membershipsFromPlaylists.sort(
+      (left, right) => left.name.localeCompare(right.name) || left.id - right.id,
+    );
+  }
+
+  return Array.isArray(song.playlists) ? song.playlists : [];
+}
+
+function getAvailablePlaylistsForSong(song) {
+  if (!song) {
+    return [];
+  }
+
+  const membershipIds = new Set(getSongPlaylistMemberships(song).map((playlist) => playlist.id));
+  return state.playlists.filter((playlist) => !membershipIds.has(playlist.id));
+}
+
+function prunePlaylistDraftSelections() {
+  for (const [songId, playlistId] of Object.entries(state.playlistDraftSelectionBySongId)) {
+    const song = getSongById(Number(songId));
+    const playlist = getPlaylistById(Number(playlistId));
+    const membershipIds = new Set(getSongPlaylistMemberships(song).map((entry) => entry.id));
+
+    if (!song || !playlist || membershipIds.has(Number(playlistId))) {
+      delete state.playlistDraftSelectionBySongId[songId];
+    }
+  }
+}
+
+function resolvePlaylistSelection(song, availablePlaylists = getAvailablePlaylistsForSong(song)) {
   if (!song) {
     return "";
   }
 
-  const storedSelection = state.playlistSelectionBySongId[song.id];
-  if (storedSelection === "") {
-    return "";
-  }
-
-  if (storedSelection && getPlaylistById(storedSelection)) {
+  const storedSelection = state.playlistDraftSelectionBySongId[song.id];
+  if (
+    storedSelection &&
+    availablePlaylists.some((playlist) => playlist.id === Number(storedSelection))
+  ) {
     return String(storedSelection);
-  }
-
-  const activePlaylist = getActivePlaylist();
-  if (activePlaylist && activePlaylist.songIds.includes(song.id)) {
-    return String(activePlaylist.id);
-  }
-
-  const matchingPlaylists = state.playlists.filter((playlist) => playlist.songIds.includes(song.id));
-  if (matchingPlaylists.length === 1) {
-    return String(matchingPlaylists[0].id);
   }
 
   return "";
@@ -2813,6 +5054,23 @@ function readFileAsDataUrl(file) {
 function loadStoredLanguage() {
   const stored = window.localStorage.getItem("78dlc-language");
   return stored === "zh" || stored === "en" ? stored : "en";
+}
+
+function loadStoredOfflineInfo() {
+  try {
+    const payload = JSON.parse(window.localStorage.getItem("78dlc-offline-info") || "{}");
+    return {
+      cachedCount: Number(payload.cachedCount) || 0,
+      cachedBytes: Number(payload.cachedBytes) || 0,
+      lastSavedAt: typeof payload.lastSavedAt === "string" ? payload.lastSavedAt : "",
+    };
+  } catch (_error) {
+    return { cachedCount: 0, cachedBytes: 0, lastSavedAt: "" };
+  }
+}
+
+function saveStoredOfflineInfo(info) {
+  window.localStorage.setItem("78dlc-offline-info", JSON.stringify(info));
 }
 
 function loadStoredSidebarWidth() {

@@ -6,7 +6,11 @@
   "scripts": {
     "dev": "node server.js",
     "start": "node server.js",
-    "import:metadata": "node utils/import_metadata_from_db.js"
+    "start:mobile": "HOST=0.0.0.0 PLAYER_HTTPS=1 PLAYER_DRIVE_SYNC=1 PLAYER_DRIVE_FOLDER_ID=1BafAOZrEUhHe2PwrG5n1KhEaS1pF6TOg node server.js",
+    "start:ktv-models": "KTV_USE_PRETRAINED=1 KTV_PYTHON=.venv-ktv/bin/python HF_HOME=.hf-cache KTV_ASR_MODEL_ID=mlx-community/whisper-large-v3-turbo node server.js",
+    "import:metadata": "node utils/import_metadata_from_db.js",
+    "test": "node --test tests/*.test.js",
+    "test:ktv-models": "RUN_KTV_MODEL_TESTS=1 KTV_USE_PRETRAINED=1 KTV_PYTHON=.venv-ktv/bin/python HF_HOME=.hf-cache KTV_MAX_AUDIO_SECONDS=6 KTV_ASR_MODEL_ID=mlx-community/whisper-tiny node --test tests/ktv-pretrained-models.test.js"
   },
   "keywords": [],
   "author": "",

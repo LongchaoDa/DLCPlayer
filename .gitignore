@@ -8,3 +8,8 @@ data/covers/*
 source/*
 !source/.gitkeep
 backups/
+.venv*/
+.hf-cache/
+__pycache__/
+*.pyc
+otherdata.zip
